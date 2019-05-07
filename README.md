@@ -7,7 +7,7 @@ Das hier ist unser Projekt für das Programmierpraktikum der Universität Wien B
 ## Features: 
 - [ ] Mittels Kommandozeile,
 - [ ] oder Benutzeroberfläche (Tkinter) verwendbar.
-- [ ] Verschiedene Kryptographie-Libraries werden verwendet.
+- [x] Verschiedene Kryptographie-Libraries werden verwendet.
 - [ ] Eine SQL-Library (voraussichtlich sqlite3) wird benutzt. 
 - [ ] Lokale verschlüsselte SQL Datenbank, die mit einem Master-Passwort geschützt wird, um die anderen Passwörter zu sichern.
 - [ ] Die lokale Datenbank wird mit RSA oder AES verschlüsselt, und eventuell implementieren wir ein File-Key Feature, um eine Art von Zwei-Faktor-Authentifizierung zu realisieren.

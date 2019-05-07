@@ -18,9 +18,9 @@ Das hier ist unser Projekt für das Programmierpraktikum der Universität Wien B
 Wir machen ein privates Git-Repository, um den Code zusammen ohne Versions- oder Codekonflikte bearbeiten zu können. Wir planen das Projekt nach dem Semesterende zu veröffentlichen (Open Source!).
 
 ### Gruppenmitglieder:
-  * Oguz Bektas           @xorond
-  * Alexander Panzenböck  @Alex6312
-  * Yuliia Korobeinikova  @juliakoko
+  * Oguz Bektas           [@xorond](https://github.com/xorond)
+  * Alexander Panzenböck  [@Alex6312](https://github.com/Alex6312)
+  * Yuliia Korobeinikova  [@juliakoko](https://github.com/juliakoko)
 
 ### Tutor: 
   * Clemens Karner

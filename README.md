@@ -8,7 +8,7 @@ Das hier ist unser Projekt für das Programmierpraktikum der Universität Wien B
 - [ ] Mittels Kommandozeile,
 - [ ] oder Benutzeroberfläche (Tkinter) verwendbar.
 - [x] Verschiedene Kryptographie-Libraries werden verwendet.
-- [ ] Eine SQL-Library (voraussichtlich sqlite3) wird benutzt. 
+- [x] Eine SQL-Library (voraussichtlich sqlite3) wird benutzt. 
 - [ ] Lokale verschlüsselte SQL Datenbank, die mit einem Master-Passwort geschützt wird, um die anderen Passwörter zu sichern.
 - [ ] Die lokale Datenbank wird mit RSA oder AES verschlüsselt, und eventuell implementieren wir ein File-Key Feature, um eine Art von Zwei-Faktor-Authentifizierung zu realisieren.
 - [ ] Mit einer simplen Pass Phrase (oder auch ohne) kann ein komplizierteres Passwort (Länge und vorkommende Sonderzeichen wählbar) mit einem unumkehrbaren Algorithmus (Hashing-Algorithmen kombiniert mit Base64-Transformationen) generiert und in der lokalen Datenbank gespeichert werden.

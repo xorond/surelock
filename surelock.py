@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from libs import rsa
+from libs import crypto_funcs
 from libs import sql
 import argparse
 
@@ -49,5 +49,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
-    

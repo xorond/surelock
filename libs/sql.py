@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sqlite3
-from libs import rsa
+from libs import crypto_funcs
 
 db_name = "surelock.db"
 

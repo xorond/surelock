@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun May 26 16:34:16 2019
+Created on Sun May 26 20:09:20 2019
 
 @author: J
 """
@@ -27,7 +27,20 @@ exp.grid(row =2, column =1)
 ok = Tk.Button(root , text='OK') 
 ok.grid(row=3,  column =1)
 
+
+label = Tk.Label(root, text='Using an existing Database', fg='black', bg='white')
+label.grid(row=5, column=0)
+
+blabel = Tk.Label(root, text = 'Brouse???:  ')
+blabel.grid(row=6, column=0)
+basis = Tk.Entry(root)
+basis.grid(row=6, column =1)
+elabel = Tk.Label(root ,text= 'Password:  ')
+elabel.grid(row=7, column =0)
+exp = Tk.Entry(root)
+exp.grid(row =7, column =1)
+
+ok = Tk.Button(root , text='OK') 
+ok.grid(row=8,  column =1)
+
 root.mainloop()
-
-
-

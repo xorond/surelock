@@ -5,43 +5,57 @@ from libs import crypto_funcs
 
 db_name = "surelock.db"
 
-def run_sql_cmd(cmd, filename=db_name):
-    # wrapper function for running sql commands on a database.
-    # note: sqlite3.connect() will create a database file if it doesn't exist
-    conn = sqlite3.connect(filename)
+class Database:
+    def __init__(self, filename=db_name):
+        self.filename = filename
+        self.conn = sqlite3.connect(self.filename)
+        self.c = self.conn.cursor()
+    def run_cmd(self, cmd, filename=db_name):
+        self.filename = filename
+        self.c.execute(f"""{cmd}""")
+    def get_cursor(self):
+        return self.c
+    def commit(self):
+        self.conn.commit()
+    def close(self):
+        self.conn.close()
 
-    c = conn.cursor()
-
-    c.execute(f"""{cmd}""")
-
-    # save changes and close connection
-    conn.commit()
-    conn.close()
+db = Database()
 
 def create_table(table_name, filename=db_name):
-    run_sql_cmd(f""" CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY AUTOINCREMENT, site TEXT, password TEXT, description TEXT) """)
+    db.run_cmd(f""" CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY AUTOINCREMENT, site TEXT, password TEXT, description TEXT) """)
+    db.commit()
 
 def insert_entry(entry_name, entry, description='', rowid='', table_name='root', filename=db_name):
     # use REPLACE if a rowid is given, INSERT if not
+    # TODO: implement encrypt_text and decrypt_text in this function
     if rowid == '':
-        run_sql_cmd(f""" INSERT INTO {table_name} (site, password, description) VALUES ('{entry_name}', '{entry}', '{description}') """)
+        db.run_cmd(f""" INSERT INTO {table_name} (site, password, description) VALUES ('{entry_name}', '{entry}', '{description}') """)
+        db.commit()
     else:
-        run_sql_cmd(f""" REPLACE INTO {table_name} (id, site, password, description) VALUES ('{rowid}', '{entry_name}', '{entry}', '{description}') """)
+        db.run_cmd(f""" REPLACE INTO {table_name} (id, site, password, description) VALUES ('{rowid}', '{entry_name}', '{entry}', '{description}') """)
+        db.commit()
 
 def delete_entry(rowid, table_name='root'):
-    run_sql_cmd(f""" DELETE FROM {table_name} WHERE id = {rowid}""")
+    db.run_cmd(f""" DELETE FROM {table_name} WHERE id = {rowid}""")
+    db.commit()
 
 def init_database(filename=db_name):
-    # TODO: implement encrypt_database and decrypt_database in this function
-    create_table('root')
-    
+    create_table('root', filename)
+    db.commit()
+
 def list_tables(filename=db_name):
-    run_sql_cmd("SELECT name FROM root WHERE type='table'")
-        
+    db.run_cmd("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = db.get_cursor().fetchall()
+    db.commit()
+    return tables
+
 def retrieve_table(table_name, filename=db_name):
-    run_sql_cmd(f""" SELECT * FROM {table_name}""")
+    # TODO: like in list_tables
+    db.run_cmd(f""" SELECT * FROM {table_name}""")
+    db.commit()
     
 def retrieve_entry(site, table_name, filename=db_name):
-    run_sql_cmd(f""" SELECT * FROM {table_name} where site={site}""")
-
-
+    # TODO: like in list_tables
+    db.run_cmd(f""" SELECT * FROM {table_name} where site={site}""")
+    db.commit()

@@ -21,13 +21,13 @@ class Algorithm:
         raw = pad(raw)
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
-        return base64.b64encode(iv + cipher.encrypt(raw.encode('utf8')))
+        return base64.b64encode(iv + cipher.encrypt(raw.encode('ascii')))
 
     def decrypt(self, enc):
         enc = base64.b64decode(enc)
         iv = enc[:16]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
-        return unpad(cipher.decrypt(enc[16:])).decode('utf8')
+        return unpad(cipher.decrypt(enc[16:])).decode('ascii')
 
 def get_pass_input(text="Type your passphrase: "):
     # text: The default text to show the user while asking for password
@@ -45,10 +45,10 @@ if __name__ == '__main__':
     text = input("text: ")
     pwd = get_pass_input()
 
-    #enc = Algorithm(pwd).encrypt(msg)
-    #print("Ciphertext: {}".format(enc))
+    enc = Algorithm(pwd).encrypt(text)
+    print("Ciphertext: {}".format(enc))
 
-    enc = text
+    #enc = text
     try:
         print("Decrypted: {}".format(Algorithm(pwd).decrypt(enc)))
     except Exception as e:

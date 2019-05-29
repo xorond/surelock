@@ -40,14 +40,11 @@ def main():
 #    if args.subparser_name == 'add':
 #        db = sql.Database(filename=args.file)
         
-#    if args.subparser_name == 'ret':
+#    if args.subparser_name == 'view':
 #        db = sql.Database(filename=args.file)
 
 #    if args.subparser_name == 'del':
 #        db = sql.Database(filename=args.file)
         
-#    if args.subparser_name == 'init':
-#        db = sql.Database(filename=args.file)
-
 if __name__ == '__main__':
     main()

@@ -4,6 +4,10 @@ Ein Passwort-Manager, der mit Python programmiert ist.
 
 Das hier ist unser Projekt für das Programmierpraktikum der Universität Wien Bachelor Mathematik.
 
+## Verwendung:
+
+Siehe [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md)
+
 ## Features: 
 - [ ] Mittels Kommandozeile,
 - [ ] oder Benutzeroberfläche (Tkinter) verwendbar.

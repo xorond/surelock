@@ -60,5 +60,6 @@ def retrieve_table(db, pwd, table_name, filename=db_name):
     
 def retrieve_entry(db, pwd, site, table_name, filename=db_name):
     # TODO: like in list_tables
+    # TODO: implement decrypt here while retrieving text
     db.run_cmd(f""" SELECT * FROM {table_name} where site={site}""")
     db.commit()

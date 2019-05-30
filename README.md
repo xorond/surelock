@@ -13,8 +13,9 @@ Siehe [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md)
 - [ ] oder Benutzeroberfläche (Tkinter) verwendbar.
 - [x] Verschiedene Kryptographie-Libraries werden verwendet.
 - [x] Eine SQL-Library (voraussichtlich sqlite3) wird benutzt. 
-- [ ] Lokale verschlüsselte SQL Datenbank, die mit einem Master-Passwort geschützt wird, um die anderen Passwörter zu sichern.
-- [ ] Die lokale Datenbank wird mit RSA oder AES verschlüsselt, und eventuell implementieren wir ein File-Key Feature, um eine Art von Zwei-Faktor-Authentifizierung zu realisieren.
+- [x] Lokale verschlüsselte SQL Datenbank, die mit einem Master-Passwort geschützt wird, um die anderen Passwörter zu sichern.
+- [x] Die lokale Datenbank wird mit RSA oder AES verschlüsselt
+- [x] eventuell implementieren wir ein File-Key Feature, um eine Art von Zwei-Faktor-Authentifizierung zu realisieren.
 - [ ] Mit einer simplen Pass Phrase (oder auch ohne) kann ein komplizierteres Passwort (Länge und vorkommende Sonderzeichen wählbar) mit einem unumkehrbaren Algorithmus (Hashing-Algorithmen kombiniert mit Base64-Transformationen) generiert und in der lokalen Datenbank gespeichert werden.
  - [ ] Möglicherweise: Cloud-Synchronisation per Dropbox (damit man seine Passwörter unkompliziert auf verschiedenen Geräten verwenden kann).
 

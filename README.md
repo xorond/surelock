@@ -9,7 +9,7 @@ Das hier ist unser Projekt für das Programmierpraktikum der Universität Wien B
 Siehe [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md)
 
 ## Features: 
-- [ ] Mittels Kommandozeile,
+- [x] Mittels Kommandozeile,
 - [ ] oder Benutzeroberfläche (Tkinter) verwendbar.
 - [x] Verschiedene Kryptographie-Libraries werden verwendet.
 - [x] Eine SQL-Library (voraussichtlich sqlite3) wird benutzt. 

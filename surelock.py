@@ -84,7 +84,7 @@ def main():
         b=sql.retrieve_table(db, args.table, args.file)
         print("Table: "+str(args.table))
         for e in b:
-            print("  Seite: "+ str(e[0])+ "\t Username: ".expandtabs(15-len(e[0]))+ str(e[1]))
+            print("  Site: "+ str(e[0])+ "\t Username: ".expandtabs(15-len(e[0]))+ str(e[1]))
     
     if args.subparser_name == 'showall':
         db = sql.Database(filename=args.file)
@@ -95,7 +95,7 @@ def main():
             print("Table: "+str(a))
             b=sql.retrieve_table(db, a, args.file)
             for e in b:
-                print("  Seite: "+ str(e[0])+ "\t Username: ".expandtabs(15-len(e[0]))+ str(e[1]))
+                print("  Site: "+ str(e[0])+ "\t Username: ".expandtabs(15-len(e[0]))+ str(e[1]))
 
     if args.subparser_name == 'add_table':
         db = sql.Database(filename=args.file)

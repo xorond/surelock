@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import getpass
 import base64
-import hashlib
 from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2

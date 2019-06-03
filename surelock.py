@@ -74,8 +74,8 @@ def main():
         db = sql.Database(filename=args.file)
         a=sql.retrieve_entries(db, args.category, args.file)
         if (args.entry,) not in a:
-            print('Error: No entry named ' + args.entry + ' in Category ' +args.category)
-        else:        
+            print('Error: No entry named {} in category {}'.format(args.entry, args.category))
+        else:
             pwd = common.get_pass()
             a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
             print(a)

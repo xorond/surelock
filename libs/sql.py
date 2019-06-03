@@ -28,20 +28,6 @@ def create_table(db, table_name, filename=db_name):
     db.run_cmd(f""" CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY AUTOINCREMENT, site TEXT, password TEXT, description TEXT, username TEXT) """)
     db.commit()
 
-def insert_entry(db, pwd, entry_name, entry, description='', rowid='', table_name='root', filename=db_name, username=''):
-    # db: database object
-    # pwd: result from get_pass_input
-
-    entry = crypto_funcs.Algorithm(pwd).encrypt(entry).decode("ascii")
-
-    if rowid == '':
-        db.run_cmd(f""" INSERT INTO {table_name} (site, password, description, username) VALUES ('{entry_name}', '{entry}', '{description}', '{username}') """)
-        db.commit()
-    else:
-        db.run_cmd(f""" REPLACE INTO {table_name} (id, site, password, description, username) VALUES ('{rowid}', '{entry_name}', '{entry}', '{description}', '{username}') """)
-        # we use REPLACE if a rowid is given, INSERT if not
-        db.commit()
-
 def delete_entry(db, site, table_name='root'):
     db.run_cmd(f""" DELETE FROM {table_name} WHERE site='{site}' """)
     db.commit()
@@ -70,7 +56,7 @@ def retrieve_entry(db, pwd, site, table_name='root', filename=db_name):
     db.commit()
     return decpwd
 
-def insert_entry2(db, pwd, entry_name, entry_password, description='', table_name='root', filename=db_name, username=''):
+def insert_entry(db, pwd, entry_name, entry_password, description='', table_name='root', filename=db_name, username=''):
     #inserts an entry or replaces it if the name already exists
     entry_password = crypto_funcs.Algorithm(pwd).encrypt(entry_password).decode("ascii")
     a=retrieve_entries(db, table_name, filename)

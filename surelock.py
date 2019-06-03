@@ -68,7 +68,7 @@ def main():
         db = sql.Database(filename=args.file)
         sql.create_table(db, args.category, args.file)
         entrypwd = common.get_pass("Password for {}: ".format(args.entry))
-        sql.insert_entry2(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
+        sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
         
     if args.subparser_name == 'view':
         db = sql.Database(filename=args.file)

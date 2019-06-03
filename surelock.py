@@ -3,6 +3,7 @@
 from libs import crypto_funcs
 from libs import sql
 from libs import common
+import sys
 import argparse
 import pandas as pd
 
@@ -110,6 +111,11 @@ def main():
     if args.subparser_name == 'delete_category':
         db = sql.Database(filename=args.file)
         sql.delete_table(db, args.category, args.file)
+
+    # handle no arguments
+    if len(sys.argv[1:]) == 0:
+        parser.print_help()
+        sys.exit()
     
 if __name__ == '__main__':
     main()

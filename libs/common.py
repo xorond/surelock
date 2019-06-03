@@ -9,8 +9,7 @@ def get_pass_input(text="Type your passphrase: "):
     if secret != secret_validate:
         print("Passphrases do not match!")
         get_pass_input() # Ask again
-    else:
-        return secret
+    return secret
 
 def get_pass(text="Type your passphrase: "):
     secret = getpass.getpass("{}".format(text))

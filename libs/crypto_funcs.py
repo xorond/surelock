@@ -39,6 +39,10 @@ def get_pass_input(text="Type your passphrase: "):
     else:
         return secret
 
+def get_pass(text="Type your passphrase: "):
+    secret = getpass.getpass("{}".format(text))
+    return secret
+
 # For testing purposes
 if __name__ == '__main__':
     text = input("text: ")

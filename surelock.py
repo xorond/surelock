@@ -66,15 +66,20 @@ def main():
     if args.subparser_name == 'add':
         pwd = crypto_funcs.get_pass_input()
         db = sql.Database(filename=args.file)
+        sql.create_table(db, args.category, args.file)
         sql.insert_entry2(db, pwd, args.entry, args.entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
         
     if args.subparser_name == 'view':
-        pwd = crypto_funcs.get_pass_input()
         db = sql.Database(filename=args.file)
-        a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
-        print(a)
-        df=pd.DataFrame([str(a)])
-        df.to_clipboard(index=False,header=False)
+        a=sql.retrieve_entries(db, args.category, args.file)
+        if (args.entry,) not in a:
+            print('Error: No entry named ' + args.entry + ' in Category ' +args.category)
+        else:        
+            pwd = crypto_funcs.get_pass()
+            a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
+            print(a)
+            df=pd.DataFrame([str(a)])
+            df.to_clipboard(index=False,header=False)
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)

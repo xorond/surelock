@@ -75,8 +75,8 @@ def insert_entry2(db, pwd, entry_name, entry_password, description='', table_nam
         db.run_cmd(f""" INSERT INTO {table_name} (site, password, description, username) VALUES ('{entry_name}', '{entry_password}', '{description}', '{username}') """)
         db.commit()
     else:
-        c=input("Do you want to replace the username, password and description for this entry? y/n")
-        if c == "y":
+        c=input("Do you want to replace username, password and description for this entry? y/n")
+        if ask_confirmation(c):
             a=get_rowid(db, entry_name, table_name)
             delete_entry(db, entry_name, table_name)
             db.run_cmd(f""" INSERT INTO {table_name} (id, site, password, description, username) VALUES ('{a}', '{entry_name}', '{entry_password}', '{description}', '{username}') """)
@@ -98,3 +98,9 @@ def get_rowid(db, site, table_name='root'):
 def delete_table(db, table_name, filename=db_name):
     db.run_cmd(f""" DROP TABLE IF EXISTS {table_name} """)
     db.commit()
+
+def ask_confirmation(answer):
+    if answer in ['y','Y','j','J']:
+        return True
+    else:
+        return False

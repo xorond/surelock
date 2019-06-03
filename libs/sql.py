@@ -12,7 +12,10 @@ class Database:
         self.c = self.conn.cursor()
     def run_cmd(self, cmd, filename=db_name):
         self.filename = filename
-        self.c.execute(f"""{cmd}""")
+        try:
+            self.c.execute(f"""{cmd}""")
+        except Exception as e:
+            print("Error: {}".format(e))
     def get_cursor(self):
         return self.c
     def commit(self):

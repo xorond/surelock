@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import getpass
 import base64
+from . import common
 from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
@@ -28,25 +28,10 @@ class Algorithm:
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         return unpad(cipher.decrypt(enc[16:])).decode('ascii')
 
-def get_pass_input(text="Type your passphrase: "):
-    # text: The default text to show the user while asking for password
-
-    secret = getpass.getpass("{}".format(text))
-    secret_validate = getpass.getpass("Retype your passphrase: ")
-    if secret != secret_validate:
-        print("Passphrases do not match!")
-        get_pass_input() # Ask again
-    else:
-        return secret
-
-def get_pass(text="Type your passphrase: "):
-    secret = getpass.getpass("{}".format(text))
-    return secret
-
 # For testing purposes
 if __name__ == '__main__':
     text = input("text: ")
-    pwd = get_pass_input()
+    pwd = common.get_pass_input()
 
     enc = Algorithm(pwd).encrypt(text)
     print("Ciphertext: {}".format(enc))

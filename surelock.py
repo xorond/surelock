@@ -2,6 +2,7 @@
 
 from libs import crypto_funcs
 from libs import sql
+from libs import common
 import argparse
 import pandas as pd
 
@@ -12,7 +13,6 @@ def main():
 
     parser_add = subparsers.add_parser('add', help='add a new entry')
     parser_add.add_argument("entry", help="name of the new entry", type=str)
-    parser_add.add_argument("entrypwd", help="password to be saved with this entry", type=str)
     parser_add.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
     parser_add.add_argument("-c","--category" , help="name of the category", type=str, default="root")
     parser_add.add_argument("-u","--username" , help="username for the entry", type=str, default="")
@@ -63,10 +63,11 @@ def main():
             print (str(e[0]))
 
     if args.subparser_name == 'add':
-        pwd = crypto_funcs.get_pass_input()
+        pwd = common.get_pass_input()
         db = sql.Database(filename=args.file)
         sql.create_table(db, args.category, args.file)
-        sql.insert_entry2(db, pwd, args.entry, args.entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
+        entrypwd = common.get_pass("Password for {}: ".format(args.entry))
+        sql.insert_entry2(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
         
     if args.subparser_name == 'view':
         db = sql.Database(filename=args.file)
@@ -74,7 +75,7 @@ def main():
         if (args.entry,) not in a:
             print('Error: No entry named ' + args.entry + ' in Category ' +args.category)
         else:        
-            pwd = crypto_funcs.get_pass()
+            pwd = common.get_pass()
             a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
             print(a)
             df=pd.DataFrame([str(a)])

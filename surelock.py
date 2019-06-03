@@ -4,7 +4,6 @@ from libs import crypto_funcs
 from libs import sql
 import argparse
 import pandas as pd
-#pandas is used to copy the password to the clipboard (cross-platform support) 
 
 def main():
     

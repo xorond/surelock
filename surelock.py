@@ -87,8 +87,11 @@ def main():
             pwd = common.get_pass()
             a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
             print(a)
-            df=pd.DataFrame([str(a)])
-            df.to_clipboard(index=False,header=False)
+            try:
+                df=pd.DataFrame([str(a)])
+                df.to_clipboard(index=False,header=False)
+            except Exception as e:
+                print("Error: {}".format(e))
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)

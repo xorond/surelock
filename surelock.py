@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
-from libs import crypto_funcs
-from libs import sql
-from libs import common
 import sys
 import argparse
-import pandas as pd
+
+# handle our imports
+try:
+    from libs import crypto_funcs
+    from libs import sql
+    from libs import common
+    import pandas as pd
+except Exception as e:
+    print("Error: {}".format(e))
+    sys.exit()
 
 def main():
     

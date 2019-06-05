@@ -65,7 +65,9 @@ def main():
     if args.subparser_name == 'list':
         db = sql.Database(filename=args.file)
         tables = sql.list_tables(db)
-        tables.remove(("sqlite_sequence",))
+        print(tables)
+        if ("sqlite_sequence",) in tables:
+            tables.remove(("sqlite_sequence",))
         for e in tables:
             print (str(e[0]))
 
@@ -102,7 +104,8 @@ def main():
     if args.subparser_name == 'showall':
         db = sql.Database(filename=args.file)
         tables = sql.list_tables(db)
-        tables.remove(("sqlite_sequence",))
+        if ("sqlite_sequence",) in tables:
+            tables.remove(("sqlite_sequence",))
         for c in tables:
             a=c[0]
             print("Category: "+str(a))

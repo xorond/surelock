@@ -47,7 +47,7 @@ def retrieve_table(db, table_name='root', filename=db_name):
     table = db.get_cursor().fetchall()
     db.commit()
     return table
-        
+
 def retrieve_entry(db, pwd, site, table_name='root', filename=db_name):
     db.run_cmd(f""" SELECT password FROM {table_name} WHERE site='{site}' """)
     entrypwd = db.get_cursor().fetchall()

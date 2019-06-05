@@ -27,3 +27,15 @@ $ surelock init
 ```
 $ surelock list
 ```
+
+### Add a new entry
+```
+$ surelock add github
+```
+adds a password for github in the database.
+
+### View an entry
+```
+$ surelock view github
+```
+will ask for your master password, and then show the saved password in the database.

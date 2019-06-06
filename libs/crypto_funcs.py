@@ -31,7 +31,7 @@ class Algorithm:
 # For testing purposes
 if __name__ == '__main__':
     text = input("text: ")
-    pwd = common.get_pass_input()
+    pwd = common.get_master_pass()
 
     enc = Algorithm(pwd).encrypt(text)
     print("Ciphertext: {}".format(enc))

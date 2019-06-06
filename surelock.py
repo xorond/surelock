@@ -72,7 +72,7 @@ def main():
             print (str(e[0]))
 
     if args.subparser_name == 'add':
-        pwd = common.get_pass_input()
+        pwd = common.get_master_pass()
         db = sql.Database(filename=args.file)
         sql.create_table(db, args.category, args.file)
         entrypwd = common.get_pass("Password for {}: ".format(args.entry))

@@ -19,21 +19,21 @@ def main():
     subparsers = parser.add_subparsers(dest='subparser_name')
 
     parser_add = subparsers.add_parser('add', help='add a new entry')
-    parser_add.add_argument("entry", help="name of the new entry", type=str)
     parser_add.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
-    parser_add.add_argument("-c","--category" , help="name of the category", type=str, default="root")
-    parser_add.add_argument("-u","--username" , help="username for the entry", type=str, default="")
-    parser_add.add_argument("-d","--description" , help="description of the entry", type=str, default="")
+    parser_add.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
+    parser_add.add_argument("entry", help="name of the new entry", type=str)
+    parser_add.add_argument("username" , help="username for the entry", default="", type=str, nargs="?")
+    parser_add.add_argument("description" , help="description of the entry", default="", type=str, nargs="*")
 
     parser_view = subparsers.add_parser('view', help='view a password')
+    parser_view.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
     parser_view.add_argument("entry", help="the entry for which you want to view  password", type=str)
     parser_view.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
-    parser_view.add_argument("-c","--category" , help="name of the category", type=str, default="root")
 
     parser_del = subparsers.add_parser('del', help='delete an entry')
+    parser_del.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
     parser_del.add_argument("entry", help="name of the entry you want to delete", type=str)
     parser_del.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
-    parser_del.add_argument("-c","--category" , help="name of the category", type=str, default="root")
 
     parser_list = subparsers.add_parser('list', help='list categories from the database')
     parser_list.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
@@ -42,7 +42,7 @@ def main():
     parser_init.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
 
     parser_show_category = subparsers.add_parser('show', help='show a category')
-    parser_show_category.add_argument("-c","--category", help="the category you want to view", type=str, default="root")
+    parser_show_category.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
     parser_show_category.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
 
     parser_add_category = subparsers.add_parser('add_category', help='add a category')
@@ -74,6 +74,10 @@ def main():
     if args.subparser_name == 'add':
         pwd = common.get_master_pass()
         db = sql.Database(filename=args.file)
+
+        # join the rest of the arguments into description as a single string
+        args.description = " ".join(args.description)
+
         sql.create_table(db, args.category, args.file)
         entrypwd = common.get_pass("Password for {}: ".format(args.entry))
         sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)

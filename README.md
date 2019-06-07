@@ -16,7 +16,7 @@ Siehe [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md)
 - [x] Lokale verschlüsselte SQL Datenbank, die mit einem Master-Passwort geschützt wird, um die anderen Passwörter zu sichern.
 - [x] Die lokale Datenbank wird mit RSA oder AES verschlüsselt
 - [ ] eventuell implementieren wir ein File-Key Feature, um eine Art von Zwei-Faktor-Authentifizierung zu realisieren.
-- [ ] Mit einer simplen Pass Phrase (oder auch ohne) kann ein komplizierteres Passwort (Länge und vorkommende Sonderzeichen wählbar) mit einem unumkehrbaren Algorithmus (Hashing-Algorithmen kombiniert mit Base64-Transformationen) generiert und in der lokalen Datenbank gespeichert werden.
+- [x] Mit einer simplen Pass Phrase (oder auch ohne) kann ein komplizierteres Passwort (Länge und vorkommende Sonderzeichen wählbar) mit einem unumkehrbaren Algorithmus (Hashing-Algorithmen kombiniert mit Base64-Transformationen) generiert und in der lokalen Datenbank gespeichert werden.
  - [ ] Möglicherweise: Cloud-Synchronisation per Dropbox (damit man seine Passwörter unkompliziert auf verschiedenen Geräten verwenden kann).
 
 ## Entwicklungs-Workflow: 

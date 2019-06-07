@@ -46,7 +46,7 @@ def pwd_gen(start_pwd="", special_chars=True, numbers=True, upper_case=True, cha
     if numbers: 
         l=l+num
         a=a+10
-    if special_chars: 
+    if upper_case: 
         l=l+capitals
         a=a+26
     if start_pwd=="":

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import re
 import base64
-import common
 from hashlib import sha512, sha384, sha256
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -93,7 +92,6 @@ if __name__ == '__main__':
     text = input("text: ")
     given_len = input("length: ")
     '''
-    pwd = common.get_master_pass()
 
     enc = Algorithm(pwd).encrypt(text)
     print("Ciphertext: {}".format(enc))

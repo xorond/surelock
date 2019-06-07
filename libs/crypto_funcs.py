@@ -45,6 +45,9 @@ class Password:
     are not the same
     """
     def __init__(self, passphrase="", length=32, specials=False):
+        # use random passphrase if none is given
+        if passphrase == "":
+            passphrase = str(Random.new().read(16))
         self.passphrase = passphrase
         self.length = length
         self.specials = specials

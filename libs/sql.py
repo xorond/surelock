@@ -40,6 +40,8 @@ def list_tables(db, filename=db_name):
     db.run_cmd("SELECT name FROM sqlite_master WHERE type='table'")
     tables = db.get_cursor().fetchall()
     db.commit()
+    if ("sqlite_sequence",) in tables:
+        tables.remove(("sqlite_sequence",))
     return tables
 
 def retrieve_table(db, table_name='root', filename=db_name):

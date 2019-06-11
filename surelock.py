@@ -90,8 +90,6 @@ def main():
     if args.subparser_name == 'show':
         db = sql.Database(filename=args.file)
         tables = sql.list_tables(db)
-        if ("sqlite_sequence",) in tables:
-            tables.remove(("sqlite_sequence",))
         if args.list_categories:
             for e in tables:
                 print (str(e[0]))

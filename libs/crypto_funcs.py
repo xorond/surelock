@@ -5,6 +5,7 @@ from hashlib import sha512, sha384, sha256
 from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
+import random
 
 pad = lambda s: s + (AES.block_size - len(s) % AES.block_size) * chr(AES.block_size - len(s) % AES.block_size)
 unpad = lambda s: s[:-ord(s[len(s) - 1:])]
@@ -30,6 +31,39 @@ class Algorithm:
         iv = enc[:16]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         return unpad(cipher.decrypt(enc[16:])).decode('ascii')
+
+def pwd_gen(start_pwd="", special_chars=True, numbers=True, upper_case=True, characters=16):
+    special=["!", "#", "$", "%", "&", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "{", "}", "~"]
+    num=["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    capitals=["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    lower_case=["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+    l=lower_case
+    a=25
+    final_pwd=""
+    if special_chars: 
+        l=l+special
+        a=a+26
+    if numbers: 
+        l=l+num
+        a=a+10
+    if upper_case: 
+        l=l+capitals
+        a=a+26
+    if start_pwd=="":
+        for i in range(characters):
+            final_pwd+=str(l[random.randint(0, a)])
+        return final_pwd
+    else:
+        n=[ord(x) for x in start_pwd]
+        e=0
+        while len(n)<=characters:
+            n.append(n[e]+characters+len(n))
+            e=e+1
+        b=characters
+        for i in range(characters):
+            b=((b+characters)*n[i]*n[i-1]+i)%a
+            final_pwd+=str(l[b])
+        return final_pwd
 
 class Password:
     """
@@ -88,10 +122,13 @@ class Password:
         return self.passphrase
 
 # For testing purposes
+"""
 if __name__ == '__main__':
     text = input("text: ")
-    given_len = input("length: ")
-    '''
+   given_len = input("length: ")
+   
+"""
+'''
 
     enc = Algorithm(pwd).encrypt(text)
     print("Ciphertext: {}".format(enc))
@@ -101,8 +138,10 @@ if __name__ == '__main__':
         print("Decrypted: {}".format(Algorithm(pwd).decrypt(enc)))
     except Exception as e:
         print(f"Error: {e}")
-    '''
-
+'''
+"""
     password = Password(passphrase=text, length=int(given_len))
     generated = password.generate()
     print(f"password: {generated}")
+"""
+

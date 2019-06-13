@@ -72,6 +72,19 @@ def insert_entry(db, pwd, entry_name, entry_password, description='', table_name
             delete_entry(db, entry_name, table_name)
             db.run_cmd(f""" INSERT INTO {table_name} (id, site, password, description, username) VALUES ('{a}', '{entry_name}', '{entry_password}', '{description}', '{username}') """)
             db.commit()
+            
+def insert_entry_gui(db, pwd, entry_name, entry_password, description='', table_name='root', filename=db_name, username=''):
+    #inserts an entry or replaces it if the name already exists
+    entry_password = crypto_funcs.Algorithm(pwd).encrypt(entry_password).decode("ascii")
+    a=retrieve_entries(db, table_name, filename)
+    if (entry_name,) not in a:
+        db.run_cmd(f""" INSERT INTO {table_name} (site, password, description, username) VALUES ('{entry_name}', '{entry_password}', '{description}', '{username}') """)
+        db.commit()
+    else:
+        a=get_rowid(db, entry_name, table_name)
+        delete_entry(db, entry_name, table_name)
+        db.run_cmd(f""" INSERT INTO {table_name} (id, site, password, description, username) VALUES ('{a}', '{entry_name}', '{entry_password}', '{description}', '{username}') """)
+        db.commit()
 
 def retrieve_entries(db, table_name='root', filename=db_name):
     db.run_cmd(f""" SELECT site FROM {table_name}""")

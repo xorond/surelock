@@ -16,8 +16,7 @@ except Exception as e:
     sys.exit()
 
 class first_window:
-    file=""
-    masterpass=""
+
     def __init__(self, master):
         self.background = "light sea green"
         self.foreground = "light yellow"
@@ -96,6 +95,8 @@ class first_window:
         self.password_create_1.trace("w", lambda x,y,z: self.check_passwords())
         self.password_create_2.trace("w", lambda x,y,z: self.check_passwords())
         
+        self.master.protocol("WM_DELETE_WINDOW", self.exit_surelock)
+        
     def open_database(self):
         filename = filedialog.askopenfilename(filetypes=(("Database files", "*.db"),("All files", "*.*") ))
         self.open_file.delete(0,tk.END)
@@ -146,9 +147,8 @@ class first_window:
         self.newWindow.transient(self.master)
         
     def exit_surelock(self):
-        first_window.file="?"
-        self.master.destroy()
-        
+        self.master.master.destroy()
+
     def check_passwords(self):
         if self.password_create_1.get() == self.password_create_2.get():
             self.label1.config(fg = self.background)
@@ -159,10 +159,8 @@ class first_window:
             
 
 class main_window:
-    db_main=""
-    masterpass_main=""
-    def __init__(self, master):
 
+    def __init__(self, master):
         self.master = master
         self.master.title("Surelock Password Manager")
         self.master.geometry('1250x650+0+0')
@@ -174,75 +172,77 @@ class main_window:
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
 
-        if first_window.file == "?":
-            self.master.destroy()
-        else:
-            
-            main_window.db_main=sql.Database(filename=first_window.file)
-            if len(sql.list_tables(main_window.db_main)) == 0:
-                sql.init_database(main_window.db_main)
-            main_window.masterpass_main = first_window.masterpass
+        main_window.db_main=sql.Database(filename=first_window.file)
+        if len(sql.list_tables(main_window.db_main)) == 0:
+            sql.init_database(main_window.db_main)
+        main_window.masterpass_main = first_window.masterpass
 
-            self.menubar=tk.Menu(self.frame)
-            self.filemenu=tk.Menu(self.menubar ,tearoff =0)
-            self.filemenu.add_command(label="Open/Create Database", command=self.open_or_create_database)
-            self.filemenu.add_separator()
-            self.filemenu.add_command(label="Exit", command=self.exit_surelock)
-            self.menubar.add_cascade(label="File",menu=self.filemenu)
-            self.helpmenu=tk.Menu(self.menubar ,tearoff =0)
-            self.helpmenu.add_command(label="About", command=self.open_about)
-            self.menubar.add_cascade(label="Help",menu=self.helpmenu)
-            self.master.config(menu=self.menubar) 
-    
-            self.label = tk.Label(self.frame, text ="Categories:")
-            self.label.grid(row=0, column =0, sticky = tk.W)
-            self.label = tk.Label(self.frame, text ="Entries:")
-            self.label.grid(row=0, column =2, sticky = tk.W)
-            
-            self.category_list = tk.Listbox(self.frame, height = 14, width = 30)
-            self.tables = sql.list_tables(main_window.db_main)
-            for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
-            self.category_list.selection_set(0)
-            self.category_list.grid(row=1, column =0, columnspan =2)
-            self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
-            
-            self.add_category_button= tk.Button(self.frame, text="Add Category", command=self.add_category)
-            self.add_category_button.grid(row=2, column =0)
-            
-            self.delete_category_button= tk.Button(self.frame , text="Delete Category", command=self.delete_category)
-            self.delete_category_button.grid(row=2, column =1)
-            
-            self.entry_list = ttk.Treeview(self.frame, columns=("Username", "Password", "Description"))
-            self.entry_list.heading('Username', text='Username')
-            self.entry_list.heading('Password', text='Password')
-            self.entry_list.heading('Description', text='Description')
-            self.entry_list.heading('#0', text='Site')
-            for entry in sql.retrieve_table(main_window.db_main, sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]):
-                self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-            self.entry_list.grid(row=1, column =2, columnspan =13)
-            self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
-            
-            self.add_entry_button= tk.Button(self.frame, text="Add Entry", command=self.add_entry)
-            self.add_entry_button.grid(row=2, column =12)
-            
-            self.delete_entry_button= tk.Button(self.frame, text="Delete Entry", command=self.delete_entry)
-            self.delete_entry_button.grid(row=2, column =11)
-            
-            self.get_password_button= tk.Button(self.frame, text="Show Password", command=self.show_password)
-            self.get_password_button.grid(row=2, column =14)
-    
-            self.copy_password_button= tk.Button(self.frame, text="Copy Password to Clipboard", command=self.copy_password)
-            self.copy_password_button.grid(row=2, column =13)
-            
-            self.clear_clipboard = tk.Button(self.frame, text="Clear clipboard", command=self.clear_clipboard)
-            self.clear_clipboard.grid(row = 3, column = 13)
-            
-            self.exit = tk.Button(self.frame, text="Exit", command=self.exit_surelock)
-            self.exit.grid(row = 3, column = 14)
-            
-            self.delete_entry_button.config(state = tk.DISABLED)
-            self.copy_password_button.config(state = tk.DISABLED)
-            self.get_password_button.config(state = tk.DISABLED)
+        self.menubar=tk.Menu(self.frame)
+        self.filemenu=tk.Menu(self.menubar ,tearoff =0)
+        self.filemenu.add_command(label="Open/Create Database", command=self.open_or_create_database)
+        self.filemenu.add_separator()
+        self.filemenu.add_command(label="Exit", command=self.exit_surelock)
+        self.menubar.add_cascade(label="File",menu=self.filemenu)
+        self.helpmenu=tk.Menu(self.menubar ,tearoff =0)
+        self.helpmenu.add_command(label="About", command=self.open_about)
+        self.menubar.add_cascade(label="Help",menu=self.helpmenu)
+        self.master.config(menu=self.menubar) 
+
+        self.label = tk.Label(self.frame, text ="Categories:")
+        self.label.grid(row=0, column =0, sticky = tk.W)
+        self.label = tk.Label(self.frame, text ="Entries:")
+        self.label.grid(row=0, column =2, sticky = tk.W)
+
+        self.category_list = tk.Listbox(self.frame, height = 14, width = 30)
+        self.tables = sql.list_tables(main_window.db_main)
+        for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
+        self.category_list.selection_set(0)
+        self.category_list.grid(row=1, column =0, columnspan =2)
+        self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
+        
+        self.category_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
+        self.category_scrollbar.config(command=self.category_list.yview)
+        if len(sql.list_tables(main_window.db_main))>14:
+            self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
+
+        self.add_category_button= tk.Button(self.frame, text="Add Category", command=self.add_category)
+        self.add_category_button.grid(row=2, column =0)
+
+        self.delete_category_button= tk.Button(self.frame , text="Delete Category", command=self.delete_category)
+        self.delete_category_button.grid(row=2, column =1)
+
+        self.entry_list = ttk.Treeview(self.frame, columns=("Username", "Password", "Description"))
+        self.entry_list.heading('Username', text='Username')
+        self.entry_list.heading('Password', text='Password')
+        self.entry_list.heading('Description', text='Description')
+        self.entry_list.heading('#0', text='Site')
+        self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
+        self.entry_scrollbar.config(command=self.entry_list.yview)
+        self.change_selected_table(True)
+        self.entry_list.grid(row=1, column =2, columnspan =13)
+        self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
+
+        self.add_entry_button= tk.Button(self.frame, text="Add Entry", command=self.add_entry)
+        self.add_entry_button.grid(row=2, column =12)
+
+        self.delete_entry_button= tk.Button(self.frame, text="Delete Entry", command=self.delete_entry)
+        self.delete_entry_button.grid(row=2, column =11)
+
+        self.get_password_button= tk.Button(self.frame, text="Show Password", command=self.show_password)
+        self.get_password_button.grid(row=2, column =14)
+
+        self.copy_password_button= tk.Button(self.frame, text="Copy Password to Clipboard", command=self.copy_password)
+        self.copy_password_button.grid(row=2, column =13)
+
+        self.clear_clipboard = tk.Button(self.frame, text="Clear Clipboard", command=self.clear_clipboard)
+        self.clear_clipboard.grid(row = 3, column = 13)
+
+        self.exit = tk.Button(self.frame, text="Exit", command=self.exit_surelock)
+        self.exit.grid(row = 3, column = 14)
+ 
+        self.delete_entry_button.config(state = tk.DISABLED)
+        self.copy_password_button.config(state = tk.DISABLED)
+        self.get_password_button.config(state = tk.DISABLED)
         
     def change_selected_table(self, event):
         if len(self.category_list.curselection()) == 1:
@@ -251,6 +251,10 @@ class main_window:
             table=sql.list_tables(main_window.db_main)[selectionnumber][0]
             self.entry_list.delete(*self.entry_list.get_children())
             for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
+            if len(sql.retrieve_table(main_window.db_main, table))>10:
+                self.entry_scrollbar.grid(row=1, column =15, sticky ="nse")
+            else:
+                self.entry_scrollbar.grid_forget()
             
     def add_category(self):
         answer = simpledialog.askstring("Add category", "Category name: ",parent=self.frame)
@@ -262,6 +266,9 @@ class main_window:
             self.delete_category_button.config(state = tk.NORMAL)
             self.category_list.selection_clear(0, tk.END)
             self.category_list.selection_set(tk.END)
+            self.change_selected_table(True)
+            if len(sql.list_tables(main_window.db_main))>14:
+                self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
         else:
             messagebox.showinfo("Error", "Category name too short!")
 
@@ -270,22 +277,21 @@ class main_window:
         tables=sql.list_tables(main_window.db_main)
         if messagebox.askokcancel("Question", "Do you want to delete the category " + tables[answer][0] + "?"):
             self.category_list.delete(answer)
-            self.entry_list.delete(*self.entry_list.get_children())
             sql.delete_table(main_window.db_main, tables[answer][0])
             self.category_list.selection_set(0)
-            self.entry_list.delete(*self.entry_list.get_children())
-            if len(sql.list_tables(main_window.db_main)) != 0:
-                table=sql.list_tables(main_window.db_main)[0][0]
-                for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-            else: 
+            self.change_selected_table(True)
+            if len(sql.list_tables(main_window.db_main))<15:
+                self.category_scrollbar.grid_forget()
+            if len(sql.list_tables(main_window.db_main)) == 0:
                 self.delete_category_button.config(state = tk.DISABLED)
                 
     def add_entry(self):
-        a = self.category_list.curselection()
+        main_window.table_num = self.category_list.curselection()
         self.newWindow = tk.Toplevel(self.master)
         self.app = add_window(self.newWindow)
         self.master.wait_window(self.newWindow)
-        self.category_list.selection_set(a)
+        self.category_list.selection_set(main_window.table_num)
+        self.change_selected_table(True)
 
     def delete_entry(self):
         entry = self.entry_list.focus()
@@ -293,8 +299,7 @@ class main_window:
         if messagebox.askokcancel("Question", "Do you want to delete the entry " + itemname + "?"):
             table = sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]
             sql.delete_entry(main_window.db_main, itemname, table)
-            self.entry_list.delete(*self.entry_list.get_children())
-            for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
+            self.change_selected_table(True)
         
     def show_password(self):
         entry = self.entry_list.focus()
@@ -319,21 +324,20 @@ class main_window:
         self.app = first_window(self.newWindow)
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
-        if first_window.file == "?":
-            self.master.destroy()
+        main_window.db_main=sql.Database(filename=first_window.file)
+        if len(sql.list_tables(main_window.db_main)) == 0:
+            sql.init_database(main_window.db_main)
+        main_window.masterpass_main = first_window.masterpass
+        tables = sql.list_tables(main_window.db_main)
+        self.category_list.delete(0,tk.END)
+        for  entry  in tables: self.category_list.insert(tk.END ,entry[0])
+        self.category_list.selection_set(0)
+        self.change_selected_table(True)
+        self.delete_category_button.config(state = tk.NORMAL)
+        if len(sql.list_tables(main_window.db_main))>14:
+            self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
         else:
-            main_window.db_main=sql.Database(filename=first_window.file)
-            if len(sql.list_tables(main_window.db_main)) == 0:
-                sql.init_database(main_window.db_main)
-            main_window.masterpass_main = first_window.masterpass
-            tables = sql.list_tables(main_window.db_main)
-            self.category_list.delete(0,tk.END)
-            for  entry  in tables: self.category_list.insert(tk.END ,entry[0])
-            self.category_list.selection_set(0)
-            self.entry_list.delete(*self.entry_list.get_children())
-            table=sql.list_tables(main_window.db_main)[0][0]
-            for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-            self.delete_category_button.config(state = tk.NORMAL)
+            self.category_scrollbar.grid_forget()
         
     def change_button_activation(self,event):
         if self.entry_list.focus() == "":
@@ -359,12 +363,8 @@ class main_window:
             return
 
 class add_window:
-    db_main=""
-    masterpass_main=""
+
     def __init__(self, master):
-        add_window.db_main = main_window.db_main
-        add_window.masterpass_main = main_window.masterpass_main
-        
         self.master = master
         self.master.title("Add an entry")
         self.master.geometry('1250x650+0+0')
@@ -378,20 +378,21 @@ class add_window:
         self.category = tk.StringVar()
         self.characters = tk.IntVar()
         self.special_characters = tk.BooleanVar()
+        self.selected_table = tk.StringVar()
         
         self.label = tk.Label(self.frame, text = "Site: ")
-        self.label.grid(row = 0, column = 0)
-        self.site = tk.Entry(self.frame, textvariable=self.site)
+        self.label.grid(row = 0, column = 0, sticky = tk.E)
+        self.site = tk.Entry(self.frame, width = 50, textvariable=self.site)
         self.site.grid(row = 0, column = 1)
         self.label = tk.Label(self.frame, text = "Username: ")
-        self.label.grid(row = 1, column = 0)
-        self.username = tk.Entry(self.frame, textvariable=self.username)
+        self.label.grid(row = 1, column = 0, sticky = tk.E)
+        self.username = tk.Entry(self.frame, width = 50, textvariable=self.username)
         self.username.grid(row = 1, column = 1)
         self.label = tk.Label(self.frame, text = "Password: ")
-        self.label.grid(row = 2, column = 0)
+        self.label.grid(row = 2, column = 0, sticky = tk.E)
         self.password = tk.Entry(self.frame, show="*", width = 50, textvariable=self.password)
         self.password.grid(row = 2, column = 1)
-        
+
         self.label = tk.Label(self.frame, text = "Generate a random password for this entry: ")
         self.label.grid(row = 0, column = 3)
         self.label = tk.Label(self.frame, text = "Number of characters: ")
@@ -401,16 +402,18 @@ class add_window:
         self.chars.set(16)
         self.sp_chars=tk.Checkbutton(self.frame,text="Generate with special chracters", variable=self.special_characters)
         self.sp_chars.grid(row = 2, column = 3, columnspan = 2)
-        self.password_button = tk.Button(self.frame, text="Generate a random password", command=self.generate)
+        self.password_button = tk.Button(self.frame, text="Generate random password", command=self.generate)
         self.password_button.grid(row = 3, column = 3)
         
         self.label = tk.Label(self.frame, text = "Category: ")
-        self.label.grid(row = 3, column = 0)
-        self.category = tk.Entry(self.frame, textvariable=self.category)
-        self.category.grid(row = 3, column = 1)
+        self.label.grid(row = 3, column = 0, sticky = tk.E)
+        self.selected_table.set(sql.list_tables(main_window.db_main)[main_window.table_num[0]][0])
+        self.table_select = tk.OptionMenu(self.frame, self.selected_table, *[a[0] for a in sql.list_tables(main_window.db_main)])
+        self.table_select.config(width = 10)
+        self.table_select.grid(row = 3, column = 1, sticky = tk.W)
         self.label = tk.Label(self.frame, text = "Description: ")
-        self.label.grid(row = 4, column = 0)
-        self.description = tk.Entry(self.frame, textvariable=self.description)
+        self.label.grid(row = 4, column = 0, sticky = tk.E)
+        self.description = tk.Entry(self.frame, width = 50, textvariable=self.description)
         self.description.grid(row = 4, column = 1)
         
         self.ok_button = tk.Button(self.frame, text="OK", command=self.add_entry)
@@ -421,9 +424,15 @@ class add_window:
         username = self.username.get()
         password = self.password.get()
         description = self.description.get()
-        table = self.category.get()
-        sql.insert_entry(add_window.db_main, add_window.masterpass_main, site, password, description, table, username=username)
-        self.master.destroy()
+        table = self.selected_table.get()
+        if (site,) in sql.retrieve_entries(main_window.db_main, table):
+            answer = messagebox.askyesno("Question","The entry " + site + " already exists in the table " + table + "!\nDo you want to replace it?")
+            if answer:
+                sql.insert_entry_gui(main_window.db_main, main_window.masterpass_main, site, password, description, table, username=username)
+                self.master.destroy()
+        else:
+            sql.insert_entry_gui(main_window.db_main, main_window.masterpass_main, site, password, description, table, username=username)
+            self.master.destroy()
         
     def generate(self):
         pw = crypto_funcs.pwd_gen(special_chars = self.special_characters.get(), characters = self.characters.get())
@@ -463,11 +472,10 @@ class pw_gen_window:
         self.ok_button.grid(row = 5, column = 0)
         self.esc_button = tk.Button(self.frame, text="Exit", command=self.esc)
         self.esc_button.grid(row = 6, column = 0)
-        self.copy_to_clipboard = tk.Button(self.frame, text="Copy to clipboard", command=self.copy)
+        self.copy_to_clipboard = tk.Button(self.frame, text="Copy to Clipboard", command=self.copy)
         self.copy_to_clipboard.grid(row = 5, column = 1)
-        self.clear_clipboard = tk.Button(self.frame, text="Clear clipboard", command=self.clear)
+        self.clear_clipboard = tk.Button(self.frame, text="Clear Clipboard", command=self.clear)
         self.clear_clipboard.grid(row = 5, column = 2)
-        
 
     def generate(self):
         pw = crypto_funcs.pwd_gen(self.start_pwd.get(), self.special_characters.get(), characters = self.characters.get())

@@ -125,15 +125,18 @@ class first_window:
         self.create_file_pwd2.delete(0, tk.END)
 
     def next_window_create(self):
-        directory = os.path.split(self.file_create.get())
-        if os.path.isfile(self.file_create.get()):
+        file = self.file_create.get()
+        directory = os.path.split(file)
+        if os.path.isfile(file):
             messagebox.showinfo("Error", "This File already exists!")
-        elif not os.path.isdir(directory[0]):
-            messagebox.showinfo("Error", "This Directory does not exist!")
         elif os.path.isdir(directory[0]) and directory[1] != "":
-            first_window.file = self.file_create.get()
+            if file[-3:] != ".db":
+                file = file + ".db"
+            first_window.file = file
             first_window.masterpass = self.password_create_1.get()
             self.master.destroy()
+        elif not os.path.isdir(directory[0]):
+            messagebox.showinfo("Error", "This Directory does not exist!")
         else:
             messagebox.showinfo("Error", "Filename is empty!")
             
@@ -174,28 +177,32 @@ class main_window:
         if first_window.file == "?":
             self.master.destroy()
         else:
+            
             main_window.db_main=sql.Database(filename=first_window.file)
+            if len(sql.list_tables(main_window.db_main)) == 0:
+                sql.init_database(main_window.db_main)
             main_window.masterpass_main = first_window.masterpass
 
             self.menubar=tk.Menu(self.frame)
             self.filemenu=tk.Menu(self.menubar ,tearoff =0)
             self.filemenu.add_command(label="Open/Create Database", command=self.open_or_create_database)
             self.filemenu.add_separator()
-            self.filemenu.add_command(label="Exit", command=self.frame.quit)
+            self.filemenu.add_command(label="Exit", command=self.exit_surelock)
             self.menubar.add_cascade(label="File",menu=self.filemenu)
             self.helpmenu=tk.Menu(self.menubar ,tearoff =0)
             self.helpmenu.add_command(label="About", command=self.open_about)
             self.menubar.add_cascade(label="Help",menu=self.helpmenu)
             self.master.config(menu=self.menubar) 
     
-            self.categorylabel = tk.Label(self.frame, text ="Categories:")
-            self.categorylabel.grid(row=0, column =0, columnspan =2)
+            self.label = tk.Label(self.frame, text ="Categories:")
+            self.label.grid(row=0, column =0, sticky = tk.W)
+            self.label = tk.Label(self.frame, text ="Entries:")
+            self.label.grid(row=0, column =2, sticky = tk.W)
             
-            self.category_list = tk.Listbox(self.frame)
-            if (first_window.masterpass != "" and first_window.file != ""):
-                self.tables = sql.list_tables(main_window.db_main)
-                for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
-                self.category_list.selection_set(0)
+            self.category_list = tk.Listbox(self.frame, height = 14, width = 30)
+            self.tables = sql.list_tables(main_window.db_main)
+            for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
+            self.category_list.selection_set(0)
             self.category_list.grid(row=1, column =0, columnspan =2)
             self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
             
@@ -209,9 +216,9 @@ class main_window:
             self.entry_list.heading('Username', text='Username')
             self.entry_list.heading('Password', text='Password')
             self.entry_list.heading('Description', text='Description')
-            if (first_window.masterpass != "" and first_window.file != "" and len(sql.list_tables(main_window.db_main)) != 0):
-                for entry in sql.retrieve_table(main_window.db_main, sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]):
-                    self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
+            self.entry_list.heading('#0', text='Site')
+            for entry in sql.retrieve_table(main_window.db_main, sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]):
+                self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
             self.entry_list.grid(row=1, column =2, columnspan =13)
             self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
             
@@ -230,6 +237,9 @@ class main_window:
             self.clear_clipboard = tk.Button(self.frame, text="Clear clipboard", command=self.clear_clipboard)
             self.clear_clipboard.grid(row = 3, column = 13)
             
+            self.exit = tk.Button(self.frame, text="Exit", command=self.exit_surelock)
+            self.exit.grid(row = 3, column = 14)
+            
             self.delete_entry_button.config(state = tk.DISABLED)
             self.copy_password_button.config(state = tk.DISABLED)
             self.get_password_button.config(state = tk.DISABLED)
@@ -241,12 +251,19 @@ class main_window:
             table=sql.list_tables(main_window.db_main)[selectionnumber][0]
             self.entry_list.delete(*self.entry_list.get_children())
             for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-    
+            
     def add_category(self):
         answer = simpledialog.askstring("Add category", "Category name: ",parent=self.frame)
-        if answer != "":
+        if (answer,) in sql.list_tables(main_window.db_main):
+            messagebox.showinfo("Error", "This category already exists!")
+        elif answer != "":
             self.category_list.insert(tk.END ,answer)
             sql.create_table(main_window.db_main, answer)
+            self.delete_category_button.config(state = tk.NORMAL)
+            self.category_list.selection_clear(0, tk.END)
+            self.category_list.selection_set(tk.END)
+        else:
+            messagebox.showinfo("Error", "Category name too short!")
 
     def delete_category(self):
         answer=self.category_list.curselection()[0]
@@ -260,7 +277,9 @@ class main_window:
             if len(sql.list_tables(main_window.db_main)) != 0:
                 table=sql.list_tables(main_window.db_main)[0][0]
                 for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-    
+            else: 
+                self.delete_category_button.config(state = tk.DISABLED)
+                
     def add_entry(self):
         a = self.category_list.curselection()
         self.newWindow = tk.Toplevel(self.master)
@@ -300,17 +319,21 @@ class main_window:
         self.app = first_window(self.newWindow)
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
-        main_window.db_main=sql.Database(filename=first_window.file)
-        main_window.masterpass_main = first_window.masterpass
-        tables = sql.list_tables(main_window.db_main)
-        self.category_list.delete(0,tk.END)
-        if len(tables) != 0:
+        if first_window.file == "?":
+            self.master.destroy()
+        else:
+            main_window.db_main=sql.Database(filename=first_window.file)
+            if len(sql.list_tables(main_window.db_main)) == 0:
+                sql.init_database(main_window.db_main)
+            main_window.masterpass_main = first_window.masterpass
+            tables = sql.list_tables(main_window.db_main)
+            self.category_list.delete(0,tk.END)
             for  entry  in tables: self.category_list.insert(tk.END ,entry[0])
-        self.category_list.selection_set(0)
-        self.entry_list.delete(*self.entry_list.get_children())
-        if len(tables) != 0:
+            self.category_list.selection_set(0)
+            self.entry_list.delete(*self.entry_list.get_children())
             table=sql.list_tables(main_window.db_main)[0][0]
             for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
+            self.delete_category_button.config(state = tk.NORMAL)
         
     def change_button_activation(self,event):
         if self.entry_list.focus() == "":
@@ -328,6 +351,9 @@ class main_window:
             df.to_clipboard(index=False,header=False)
         except Exception as e:
             print("Error: {}".format(e))
+            
+    def exit_surelock(self):
+        self.master.destroy()
 
     def open_about(self):
             return

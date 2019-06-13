@@ -19,10 +19,14 @@ class first_window:
     file=""
     masterpass=""
     def __init__(self, master):
+        self.background = "light sea green"
+        self.foreground = "light yellow"
         self.master = master
         self.master.title("Choose/Create a Database")
-        self.master.geometry('800x400+0+0')
+        self.master.geometry('830x470+0+0')
+        self.master.config(bg = self.background)
         self.frame = tk.Frame(self.master)
+        self.frame.config(bg = self.background)
         self.frame.pack()
         
         self.file_open = tk.StringVar()
@@ -31,51 +35,66 @@ class first_window:
         self.password_create_1 = tk.StringVar()
         self.password_create_2 = tk.StringVar()
         
-        self.label = tk.Label(self.frame, text = "Open Database")
-        self.label.grid(row=0, column= 0, columnspan=4)
+        self.open_frame = tk.LabelFrame(self.frame, width = 650, height = 100, bg = self.background, bd = 10)
+        self.open_frame.grid(row=2, column= 0, columnspan=2, ipadx = 10, ipady = 3)
+        self.create_frame = tk.LabelFrame(self.frame, width = 650, height = 100, bg = self.background, bd = 10)
+        self.create_frame.grid(row=4, column= 0, columnspan=2, ipadx = 10, ipady = 3)
         
-        self.label = tk.Label(self.frame, text = "File: ")
-        self.label.grid(row=1, column= 0)
-        self.open_file=tk.Entry(self.frame, textvariable=self.file_open)
-        self.open_file.grid(row=1, column= 1)
+        self.label = tk.Label(self.frame, text = "Open an existing Database", font = ("arial", 20, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row=0, column= 0, columnspan=2, pady=(15,0))
+        
+        self.label = tk.Label(self.open_frame, text = "File: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.label.grid(row=1, column= 0, sticky = tk.E, pady=(8,0))
+        self.open_file=tk.Entry(self.open_frame, textvariable=self.file_open, font = ("arial", 13), width = 45)
+        self.open_file.grid(row=1, column= 1, pady=(8,0), columnspan=2)
         self.open_file.insert(tk.END, os.getcwd() + '\surelock.db')
-        self.open_file_browse = tk.Button(self.frame, text="Browse...", command=self.open_database)
-        self.open_file_browse.grid(row=1, column= 2)
-        self.label = tk.Label(self.frame, text = "Password: ")
-        self.label.grid(row=2, column= 0)
-        self.open_file_pwd1=tk.Entry(self.frame, show="*", textvariable=self.password_open_1)
+        self.open_file_browse = tk.Button(self.open_frame, text="Browse...", command=self.open_database, bg = self.background, fg = self.foreground, font = ("arial", 8, "bold"))
+        self.open_file_browse.grid(row=1, column= 3, pady=(8,0))
+        self.label = tk.Label(self.open_frame, text = "Password: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.label.grid(row=2, column= 0, sticky = tk.E, padx=(73,0))
+        self.open_file_pwd1=tk.Entry(self.open_frame, show="*", textvariable=self.password_open_1, font = ("arial", 13), width = 45)
         self.open_file_pwd1.insert(tk.END, "1")        #This line temporarily exists to speed up testing with the default database
-        self.open_file_pwd1.grid(row=2, column= 1)
+        self.open_file_pwd1.grid(row=2, column= 1, columnspan=2)
         
-        self.open = tk.Button(self.frame, text = 'Open', command = self.next_window_open)
-        self.open.grid(row=3, column=4, padx=10)
+        self.open = tk.Button(self.open_frame, text = 'Open', command = self.next_window_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.open.grid(row=3, column=2, pady=2)
+        self.reset = tk.Button(self.open_frame, text = 'Reset', command = self.reset_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.reset.grid(row=3, column=1, pady=2)
 
-        self.label = tk.Label(self.frame, text = "Create Database")
-        self.label.grid(row=4, column= 0, columnspan=4)
+        self.label = tk.Label(self.frame, text = "Create a new Database", font = ("arial", 20, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row=3, column= 0, columnspan=2, pady=(15,0))
         
-        self.label = tk.Label(self.frame, text = "File: ")
-        self.label.grid(row=5, column= 0)
-        self.create_file=tk.Entry(self.frame, textvariable=self.file_create)
-        self.create_file.grid(row=5, column= 1)
-        self.open_file_browse = tk.Button(self.frame, text="Browse...", command=self.create_database)
-        self.open_file_browse.grid(row=5, column= 2)
-        self.label = tk.Label(self.frame, text = "Password: ")
-        self.label.grid(row=6, column= 0)
-        self.create_file_pwd1=tk.Entry(self.frame, show="*", textvariable=self.password_create_1)
-        self.create_file_pwd1.grid(row=6, column= 1)
-        self.label = tk.Label(self.frame, text = "Repeat Password: ")
-        self.label.grid(row=7, column= 0)
-        self.create_file_pwd2=tk.Entry(self.frame, show="*", textvariable=self.password_create_2)
-        self.create_file_pwd2.grid(row=7, column= 1)
+        self.label = tk.Label(self.create_frame, text = "File: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.label.grid(row=0, column= 0, sticky = tk.E, pady=(8,0))
+        self.create_file=tk.Entry(self.create_frame, textvariable=self.file_create, font = ("arial", 13), width = 45)
+        self.create_file.grid(row=0, column= 1, columnspan=2, pady=(8,0))
+        self.create_file_browse = tk.Button(self.create_frame, text="Browse...", command=self.create_database, bg = self.background, fg = self.foreground, font = ("arial", 8, "bold"))
+        self.create_file_browse.grid(row=0, column= 3, pady=(8,0))
+        self.label = tk.Label(self.create_frame, text = "Password: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.label.grid(row=1, column= 0, sticky = tk.E)
+        self.create_file_pwd1=tk.Entry(self.create_frame, show="*", textvariable=self.password_create_1, font = ("arial", 13), width = 45)
+        self.create_file_pwd1.grid(row=1, column= 1, columnspan=2)
+        self.label = tk.Label(self.create_frame, text = "  Repeat Password: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.label.grid(row=2, column= 0, sticky = tk.E)
+        self.create_file_pwd2=tk.Entry(self.create_frame, show="*", textvariable=self.password_create_2, font = ("arial", 13), width = 45)
+        self.create_file_pwd2.grid(row=2, column= 1, columnspan=2)
         
-        self.create = tk.Button(self.frame, text = 'Create', command = self.next_window_create)
-        self.create.grid(row=7, column=4, padx=10)
+        self.label1 = tk.Label(self.create_frame, text = "Passwords do not match! ", bg = self.background, fg = self.background, font = ("arial", 13, "bold"))
+        self.label1.grid(row=3, column= 1, columnspan=2)
+        
+        self.create = tk.Button(self.create_frame, text = 'Create', command = self.next_window_create, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.create.grid(row=8, column=2, pady=2)
+        self.reset = tk.Button(self.create_frame, text = 'Reset', command = self.reset_create, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.reset.grid(row=8, column=1, pady=2)
 
-        self.exit = tk.Button(self.frame, text = 'Exit', command = self.exit_surelock)
-        self.exit.grid(row=9, column=4, pady=10, padx=10)
+        self.exit = tk.Button(self.frame, text = 'Exit', command = self.exit_surelock, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"), width = 10)
+        self.exit.grid(row=9, column=1, pady=20)
         
-        self.pw_gen = tk.Button(self.frame, text = 'Password Generator', command = self.start_password_generator)
-        self.pw_gen.grid(row=10, column=0, pady=10, padx=10, columnspan=5)
+        self.pw_gen = tk.Button(self.frame, text = 'Password Generator', command = self.start_password_generator, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"), width = 20)
+        self.pw_gen.grid(row=9, column=0, pady=20)
+        
+        self.password_create_1.trace("w", lambda x,y,z: self.check_passwords())
+        self.password_create_2.trace("w", lambda x,y,z: self.check_passwords())
         
     def open_database(self):
         filename = filedialog.askopenfilename(filetypes=(("Database files", "*.db"),("All files", "*.*") ))
@@ -88,19 +107,35 @@ class first_window:
         self.create_file.insert(0,filename)
         
     def next_window_open(self):
-        first_window.file= self.file_open.get()
-        first_window.masterpass = self.password_open_1.get()
-        self.master.destroy()
+        if os.path.isfile(self.file_open.get()):
+            first_window.file= self.file_open.get()
+            first_window.masterpass = self.password_open_1.get()
+            self.master.destroy()
+        else: 
+            messagebox.showinfo("Error", "Database does not exist!")
+        
+    def reset_open(self):
+        self.open_file.delete(0, tk.END)
+        self.open_file.insert(tk.END, os.getcwd() + '\surelock.db')
+        self.open_file_pwd1.delete(0, tk.END)
+
+    def reset_create(self):
+        self.create_file.delete(0, tk.END)
+        self.create_file_pwd1.delete(0, tk.END)
+        self.create_file_pwd2.delete(0, tk.END)
 
     def next_window_create(self):
-        file= self.file_create.get()
-        pwd1 = self.password_create_1.get()
-        pwd2 = self.password_create_2.get()
-        
-        if pwd1==pwd2:
-            first_window.file=file
-            first_window.masterpass=pwd1
+        directory = os.path.split(self.file_create.get())
+        if os.path.isfile(self.file_create.get()):
+            messagebox.showinfo("Error", "This File already exists!")
+        elif not os.path.isdir(directory[0]):
+            messagebox.showinfo("Error", "This Directory does not exist!")
+        elif os.path.isdir(directory[0]) and directory[1] != "":
+            first_window.file = self.file_create.get()
+            first_window.masterpass = self.password_create_1.get()
             self.master.destroy()
+        else:
+            messagebox.showinfo("Error", "Filename is empty!")
             
     def start_password_generator(self):
         self.newWindow = tk.Toplevel(self.master)
@@ -108,8 +143,18 @@ class first_window:
         self.newWindow.transient(self.master)
         
     def exit_surelock(self):
+        first_window.file="?"
         self.master.destroy()
-    
+        
+    def check_passwords(self):
+        if self.password_create_1.get() == self.password_create_2.get():
+            self.label1.config(fg = self.background)
+            self.create.config(state = tk.NORMAL)
+        else:
+            self.label1.config(fg = "orange")
+            self.create.config(state = tk.DISABLED)
+            
+
 class main_window:
     db_main=""
     masterpass_main=""
@@ -126,65 +171,68 @@ class main_window:
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
 
-        main_window.db_main=sql.Database(filename=first_window.file)
-        main_window.masterpass_main = first_window.masterpass
+        if first_window.file == "?":
+            self.master.destroy()
+        else:
+            main_window.db_main=sql.Database(filename=first_window.file)
+            main_window.masterpass_main = first_window.masterpass
 
-        self.menubar=tk.Menu(self.frame)
-        self.filemenu=tk.Menu(self.menubar ,tearoff =0)
-        self.filemenu.add_command(label="Open/Create Database", command=self.open_or_create_database)
-        self.filemenu.add_separator()
-        self.filemenu.add_command(label="Exit", command=self.frame.quit)
-        self.menubar.add_cascade(label="File",menu=self.filemenu)
-        self.helpmenu=tk.Menu(self.menubar ,tearoff =0)
-        self.helpmenu.add_command(label="About", command=self.open_about)
-        self.menubar.add_cascade(label="Help",menu=self.helpmenu)
-        self.master.config(menu=self.menubar) 
-
-        self.categorylabel = tk.Label(self.frame, text ="Categories:")
-        self.categorylabel.grid(row=0, column =0, columnspan =2)
-        
-        self.category_list = tk.Listbox(self.frame)
-        if (first_window.masterpass != "" and first_window.file != ""):
-            self.tables = sql.list_tables(main_window.db_main)
-            for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
-            self.category_list.selection_set(0)
-        self.category_list.grid(row=1, column =0, columnspan =2)
-        self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
-        
-        self.add_category_button= tk.Button(self.frame, text="Add Category", command=self.add_category)
-        self.add_category_button.grid(row=2, column =0)
-        
-        self.delete_category_button= tk.Button(self.frame , text="Delete Category", command=self.delete_category)
-        self.delete_category_button.grid(row=2, column =1)
-        
-        self.entry_list = ttk.Treeview(self.frame, columns=("Username", "Password", "Description"))
-        self.entry_list.heading('Username', text='Username')
-        self.entry_list.heading('Password', text='Password')
-        self.entry_list.heading('Description', text='Description')
-        if (first_window.masterpass != "" and first_window.file != "" and len(sql.list_tables(main_window.db_main)) != 0):
-            for entry in sql.retrieve_table(main_window.db_main, sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]):
-                self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-        self.entry_list.grid(row=1, column =2, columnspan =13)
-        self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
-        
-        self.add_entry_button= tk.Button(self.frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.grid(row=2, column =12)
-        
-        self.delete_entry_button= tk.Button(self.frame, text="Delete Entry", command=self.delete_entry)
-        self.delete_entry_button.grid(row=2, column =11)
-        
-        self.get_password_button= tk.Button(self.frame, text="Show Password", command=self.show_password)
-        self.get_password_button.grid(row=2, column =14)
-
-        self.copy_password_button= tk.Button(self.frame, text="Copy Password to Clipboard", command=self.copy_password)
-        self.copy_password_button.grid(row=2, column =13)
-        
-        self.clear_clipboard = tk.Button(self.frame, text="Clear clipboard", command=self.clear_clipboard)
-        self.clear_clipboard.grid(row = 3, column = 13)
-        
-        self.delete_entry_button.config(state = tk.DISABLED)
-        self.copy_password_button.config(state = tk.DISABLED)
-        self.get_password_button.config(state = tk.DISABLED)
+            self.menubar=tk.Menu(self.frame)
+            self.filemenu=tk.Menu(self.menubar ,tearoff =0)
+            self.filemenu.add_command(label="Open/Create Database", command=self.open_or_create_database)
+            self.filemenu.add_separator()
+            self.filemenu.add_command(label="Exit", command=self.frame.quit)
+            self.menubar.add_cascade(label="File",menu=self.filemenu)
+            self.helpmenu=tk.Menu(self.menubar ,tearoff =0)
+            self.helpmenu.add_command(label="About", command=self.open_about)
+            self.menubar.add_cascade(label="Help",menu=self.helpmenu)
+            self.master.config(menu=self.menubar) 
+    
+            self.categorylabel = tk.Label(self.frame, text ="Categories:")
+            self.categorylabel.grid(row=0, column =0, columnspan =2)
+            
+            self.category_list = tk.Listbox(self.frame)
+            if (first_window.masterpass != "" and first_window.file != ""):
+                self.tables = sql.list_tables(main_window.db_main)
+                for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
+                self.category_list.selection_set(0)
+            self.category_list.grid(row=1, column =0, columnspan =2)
+            self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
+            
+            self.add_category_button= tk.Button(self.frame, text="Add Category", command=self.add_category)
+            self.add_category_button.grid(row=2, column =0)
+            
+            self.delete_category_button= tk.Button(self.frame , text="Delete Category", command=self.delete_category)
+            self.delete_category_button.grid(row=2, column =1)
+            
+            self.entry_list = ttk.Treeview(self.frame, columns=("Username", "Password", "Description"))
+            self.entry_list.heading('Username', text='Username')
+            self.entry_list.heading('Password', text='Password')
+            self.entry_list.heading('Description', text='Description')
+            if (first_window.masterpass != "" and first_window.file != "" and len(sql.list_tables(main_window.db_main)) != 0):
+                for entry in sql.retrieve_table(main_window.db_main, sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]):
+                    self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
+            self.entry_list.grid(row=1, column =2, columnspan =13)
+            self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
+            
+            self.add_entry_button= tk.Button(self.frame, text="Add Entry", command=self.add_entry)
+            self.add_entry_button.grid(row=2, column =12)
+            
+            self.delete_entry_button= tk.Button(self.frame, text="Delete Entry", command=self.delete_entry)
+            self.delete_entry_button.grid(row=2, column =11)
+            
+            self.get_password_button= tk.Button(self.frame, text="Show Password", command=self.show_password)
+            self.get_password_button.grid(row=2, column =14)
+    
+            self.copy_password_button= tk.Button(self.frame, text="Copy Password to Clipboard", command=self.copy_password)
+            self.copy_password_button.grid(row=2, column =13)
+            
+            self.clear_clipboard = tk.Button(self.frame, text="Clear clipboard", command=self.clear_clipboard)
+            self.clear_clipboard.grid(row = 3, column = 13)
+            
+            self.delete_entry_button.config(state = tk.DISABLED)
+            self.copy_password_button.config(state = tk.DISABLED)
+            self.get_password_button.config(state = tk.DISABLED)
         
     def change_selected_table(self, event):
         if len(self.category_list.curselection()) == 1:
@@ -417,7 +465,6 @@ class pw_gen_window:
         
     def esc(self):
         self.master.destroy()
-        exit()
         
 def main():
     root = tk.Tk()

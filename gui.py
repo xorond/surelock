@@ -108,12 +108,15 @@ class first_window:
         self.create_file.insert(0,filename)
         
     def next_window_open(self):
-        if os.path.isfile(self.file_open.get()):
+        file=self.file_open.get()
+        if file[-3:] != ".db":
+            messagebox.showinfo("Error", "Please choose a Surelock Database File (*.db)!")
+        elif os.path.isfile(file):
             first_window.file= self.file_open.get()
             first_window.masterpass = self.password_open_1.get()
             self.master.destroy()
         else: 
-            messagebox.showinfo("Error", "Database does not exist!")
+            messagebox.showinfo("Error", "File does not exist!")
         
     def reset_open(self):
         self.open_file.delete(0, tk.END)
@@ -178,14 +181,9 @@ class main_window:
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
 
-        main_window.db_main=sql.Database(filename=first_window.file)
-        if len(sql.list_tables(main_window.db_main)) == 0:
-            sql.init_database(main_window.db_main)
-        main_window.masterpass_main = first_window.masterpass
-
         self.menubar=tk.Menu(self.frame)
         self.filemenu=tk.Menu(self.menubar ,tearoff =0)
-        self.filemenu.add_command(label="Open/Create Database", command=self.open_or_create_database)
+        self.filemenu.add_command(label="Open/Create Database", command=self.ask_to_open_or_create_database)
         self.filemenu.add_separator()
         self.filemenu.add_command(label="Exit", command=self.exit_surelock)
         self.menubar.add_cascade(label="File",menu=self.filemenu)
@@ -201,16 +199,11 @@ class main_window:
         self.label.grid(row=0, column =2, sticky = tk.W, pady=(15,0))
 
         self.category_list = tk.Listbox(self.frame, height = 14, width = 40)
-        self.tables = sql.list_tables(main_window.db_main)
-        for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
-        self.category_list.selection_set(0)
         self.category_list.grid(row=1, column =0, columnspan =2)
         self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
         
         self.category_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
         self.category_scrollbar.config(command=self.category_list.yview)
-        if len(sql.list_tables(main_window.db_main))>14:
-            self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
 
         self.add_category_button= tk.Button(self.frame, text="Add Category", command=self.add_category, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
         self.add_category_button.grid(row=2, column =0, pady=3)
@@ -225,7 +218,7 @@ class main_window:
         self.entry_list.heading('#0', text='Site')
         self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
         self.entry_scrollbar.config(command=self.entry_list.yview)
-        self.change_selected_table(True)
+
         self.entry_list.grid(row=1, column =2, columnspan =13)
         self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
 
@@ -251,6 +244,8 @@ class main_window:
         self.copy_password_button.config(state = tk.DISABLED)
         self.get_password_button.config(state = tk.DISABLED)
         
+        self.open_or_create_database()
+        
     def change_selected_table(self, event):
         if len(self.category_list.curselection()) == 1:
             self.entry_list.selection_remove(self.entry_list.selection())
@@ -262,20 +257,31 @@ class main_window:
                 self.entry_scrollbar.grid(row=1, column =15, sticky ="nse")
             else:
                 self.entry_scrollbar.grid_forget()
+                
+    def update_categories(self, selection=0):
+        tables = sql.list_tables(main_window.db_main)
+        self.category_list.delete(0,tk.END)
+        for  entry  in tables: self.category_list.insert(tk.END ,entry[0])
+        self.category_list.selection_set(selection)
+        self.change_selected_table(True)
+        if len(tables)>14:
+            self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
+        else:
+            self.category_scrollbar.grid_forget()
+        if len(tables) == 0:
+            self.delete_category_button.config(state = tk.DISABLED)
+        else:
+            self.delete_category_button.config(state = tk.NORMAL)
             
     def add_category(self):
         answer = simpledialog.askstring("Add category", "Category name: ",parent=self.frame)
-        if (answer,) in sql.list_tables(main_window.db_main):
+        if answer == None:
+            return
+        elif (answer,) in sql.list_tables(main_window.db_main):
             messagebox.showinfo("Error", "This category already exists!")
         elif answer != "":
-            self.category_list.insert(tk.END ,answer)
             sql.create_table(main_window.db_main, answer)
-            self.delete_category_button.config(state = tk.NORMAL)
-            self.category_list.selection_clear(0, tk.END)
-            self.category_list.selection_set(tk.END)
-            self.change_selected_table(True)
-            if len(sql.list_tables(main_window.db_main))>14:
-                self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
+            self.update_categories(tk.END)
         else:
             messagebox.showinfo("Error", "Category name too short!")
 
@@ -283,14 +289,8 @@ class main_window:
         answer=self.category_list.curselection()[0]
         tables=sql.list_tables(main_window.db_main)
         if messagebox.askokcancel("Question", "Do you want to delete the category " + tables[answer][0] + "?"):
-            self.category_list.delete(answer)
             sql.delete_table(main_window.db_main, tables[answer][0])
-            self.category_list.selection_set(0)
-            self.change_selected_table(True)
-            if len(sql.list_tables(main_window.db_main))<15:
-                self.category_scrollbar.grid_forget()
-            if len(sql.list_tables(main_window.db_main)) == 0:
-                self.delete_category_button.config(state = tk.DISABLED)
+            self.update_categories()
                 
     def add_entry(self):
         main_window.table_num = self.category_list.curselection()
@@ -326,25 +326,19 @@ class main_window:
         except Exception as e:
             print("Error: {}".format(e))
 
-    def open_or_create_database(self):
+    def ask_to_open_or_create_database(self):
         self.newWindow = tk.Toplevel(self.master)
         self.app = first_window(self.newWindow)
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
+        self.open_or_create_database()
+
+    def open_or_create_database(self):
         main_window.db_main=sql.Database(filename=first_window.file)
         if len(sql.list_tables(main_window.db_main)) == 0:
             sql.init_database(main_window.db_main)
         main_window.masterpass_main = first_window.masterpass
-        tables = sql.list_tables(main_window.db_main)
-        self.category_list.delete(0,tk.END)
-        for  entry  in tables: self.category_list.insert(tk.END ,entry[0])
-        self.category_list.selection_set(0)
-        self.change_selected_table(True)
-        self.delete_category_button.config(state = tk.NORMAL)
-        if len(sql.list_tables(main_window.db_main))>14:
-            self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
-        else:
-            self.category_scrollbar.grid_forget()
+        self.update_categories()
         
     def change_button_activation(self,event):
         if self.entry_list.focus() == "":

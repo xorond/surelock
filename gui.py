@@ -62,10 +62,10 @@ class first_window:
         self.open_file_pwd1.insert(tk.END, "1")        #This line temporarily exists to speed up testing with the default database
         self.open_file_pwd1.grid(row=2, column= 1, columnspan=2)
         
-        self.open = tk.Button(self.open_frame, text = 'Open', command = self.next_window_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
-        self.open.grid(row=3, column=2, pady=2)
-        self.reset = tk.Button(self.open_frame, text = 'Reset', command = self.reset_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
-        self.reset.grid(row=3, column=1, pady=2)
+        self.open_button = tk.Button(self.open_frame, text = 'Open', command = self.next_window_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.open_button.grid(row=3, column=2, pady=2)
+        self.reset_button = tk.Button(self.open_frame, text = 'Reset', command = self.reset_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.reset_button.grid(row=3, column=1, pady=2)
 
         self.label = tk.Label(self.frame, text = "Create a new Database", font = ("arial", 20, "bold"), bg = self.background, fg = self.foreground)
         self.label.grid(row=3, column= 0, columnspan=2, pady=(15,0))
@@ -95,27 +95,27 @@ class first_window:
 
         self.exit = tk.Button(self.frame, text = 'Exit', command = self.exit_surelock, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"), width = 10)
         self.exit.grid(row=9, column=1, pady=20)
-        
-        self.pw_gen = tk.Button(self.frame, text = 'Password Generator', command = self.start_password_generator, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"), width = 20)
+
+        self.pw_gen = tk.Button(self.frame, text='Password Generator', command=self.start_password_generator, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"), width=20)
         self.pw_gen.grid(row=9, column=0, pady=20)
-        
+
         self.password_create_1.trace("w", lambda x,y,z: self.check_passwords())
         self.password_create_2.trace("w", lambda x,y,z: self.check_passwords())
-        
+
         self.master.protocol("WM_DELETE_WINDOW", self.exit_surelock)
-        
+
     def open_database(self):
         filename = filedialog.askopenfilename(filetypes=(("Database files", "*.db"),("All files", "*.*") ))
         self.open_file.delete(0,tk.END)
         self.open_file.insert(0,filename)
-    
+
     def create_database(self):
-        filename = filedialog.asksaveasfilename(filetypes=(("Database files", "*.db"),("All files", "*.*") ))
-        self.create_file.delete(0,tk.END)
-        self.create_file.insert(0,filename)
-        
+        filename = filedialog.asksaveasfilename(filetypes=(("Database files", "*.db"), ("All files", "*.*")))
+        self.create_file.delete(0, tk.END)
+        self.create_file.insert(0, filename)
+
     def next_window_open(self):
-        file=self.file_open.get()
+        file = self.file_open.get()
         if file[-3:] != ".db":
             messagebox.showinfo("Error", "Please choose a Surelock Database File (*.db)!")
         elif os.path.isfile(file):
@@ -436,8 +436,8 @@ class add_window:
         self.label.grid(row = 4, column = 0, sticky = tk.E, padx=(10,0))
         self.description = tk.Entry(self.add_frame, width = 50, textvariable=self.description, font = ("arial", 13))
         self.description.grid(row = 4, column = 1, columnspan = 2)
-        self.reset = tk.Button(self.add_frame, text = 'Reset', command = self.reset, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
-        self.reset.grid(row=5, column=1, pady=2)
+        self.reset_button = tk.Button(self.add_frame, text = 'Reset', command = self.reset, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.reset_button.grid(row=5, column=1, pady=2)
         self.ok_button = tk.Button(self.add_frame, text="Add this entry", command=self.add_entry, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
         self.ok_button.grid(row = 5, column = 2, pady=2)
 
@@ -492,10 +492,10 @@ class add_window:
 
 class pw_gen_window:
     def __init__(self, master):
-        
+
         self.background = "light sea green"
         self.foreground = "light yellow"
-        
+
         self.master = master
         self.master.title("Password Generator")
         self.master.geometry('830x470+0+0')
@@ -503,13 +503,13 @@ class pw_gen_window:
         self.frame = tk.Frame(self.master)
         self.frame.config(bg = self.background)
         self.frame.pack()
-        
+
         self.start_pwd = tk.StringVar()
         self.new_pwd = tk.StringVar()
         self.characters = tk.IntVar()
         self.special_characters = tk.BooleanVar()
         self.numbers = tk.BooleanVar()
-        
+
         self.label = tk.Label(self.frame, text = "Generate a strong password based on a simple one", font = ("arial", 15, "bold"), bg = self.background, fg = self.foreground)
         self.label.grid(row = 0, column = 0, columnspan = 3, pady=(15,10))
         self.label = tk.Label(self.frame, text = "Simple Password: ", font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground)
@@ -547,7 +547,7 @@ class pw_gen_window:
             self.new_pwd.config(show = "")
             self.new_pwd.insert(tk.END, pw)
             return pw
-    
+
     def copy(self):
         try:
             df=pd.DataFrame([str(self.new_pwd.get())])
@@ -555,14 +555,14 @@ class pw_gen_window:
             df.to_clipboard(index=False,header=False)
         except Exception as e:
             print("Error: {}".format(e))
-    
+
     def clear(self):
         try:
             df=pd.DataFrame([])
             df.to_clipboard(index=False,header=False)
         except Exception as e:
             print("Error: {}".format(e))
-        
+
     def esc(self):
         self.master.destroy()
         

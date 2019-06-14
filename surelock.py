@@ -91,8 +91,8 @@ def main():
         db = sql.Database(filename=args.file)
         tables = sql.list_tables(db)
         if args.list_categories:
-            for e in tables:
-                print (str(e[0]))
+            for e in sql.list_tables_with_number_of_entries(db):
+                print (e)
             return
         if (str(args.category),) in tables:
             b=sql.retrieve_table(db, args.category, args.file)

@@ -193,12 +193,12 @@ class main_window:
         self.menubar.add_cascade(label="Help",menu=self.helpmenu)
         self.master.config(menu=self.menubar) 
 
-        self.label = tk.Label(self.frame, text ="  Categories:", font = ("arial", 15, "bold"), bg = self.background, fg = self.foreground)
+        self.label = tk.Label(self.frame, text ="Categories:", font = ("arial", 15, "bold"), bg = self.background, fg = self.foreground)
         self.label.grid(row=0, column =0, sticky = tk.W, pady=(15,0))
         self.label = tk.Label(self.frame, text ="Entries:", font = ("arial", 15, "bold"), bg = self.background, fg = self.foreground)
         self.label.grid(row=0, column =2, sticky = tk.W, pady=(15,0))
 
-        self.category_list = tk.Listbox(self.frame, height = 14, width = 40)
+        self.category_list = tk.Listbox(self.frame, height = 12, width = 30, font = ("arial", 12))
         self.category_list.grid(row=1, column =0, columnspan =2)
         self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
         
@@ -211,7 +211,10 @@ class main_window:
         self.delete_category_button= tk.Button(self.frame , text="Delete Category", command=self.delete_category, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
         self.delete_category_button.grid(row=2, column =1, pady=3, padx=3)
 
-        self.entry_list = ttk.Treeview(self.frame, columns=("Username", "Password", "Description"))
+        self.style = ttk.Style()
+        self.style.configure("Treeview", font=('Arial', 12), rowheight=25)
+        self.style.configure("Treeview.Heading", font=('Arial', 13,'bold'))
+        self.entry_list = ttk.Treeview(self.frame, style = "Treeview", columns=("Username", "Password", "Description"), height = 5)
         self.entry_list.heading('Username', text='Username')
         self.entry_list.heading('Password', text='Password')
         self.entry_list.heading('Description', text='Description')
@@ -219,7 +222,7 @@ class main_window:
         self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
         self.entry_scrollbar.config(command=self.entry_list.yview)
 
-        self.entry_list.grid(row=1, column =2, columnspan =13)
+        self.entry_list.grid(row=1, column =2, columnspan =13, sticky = "sn")
         self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
 
         self.add_entry_button= tk.Button(self.frame, text="Add Entry", width = 14, command=self.add_entry, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
@@ -253,18 +256,19 @@ class main_window:
             table=sql.list_tables(main_window.db_main)[selectionnumber][0]
             self.entry_list.delete(*self.entry_list.get_children())
             for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-            if len(sql.retrieve_table(main_window.db_main, table))>10:
-                self.entry_scrollbar.grid(row=1, column =15, sticky ="nse")
+            if len(sql.retrieve_table(main_window.db_main, table))>8:
+                self.entry_scrollbar.grid(row=1, column =14, sticky ="nse")
             else:
                 self.entry_scrollbar.grid_forget()
                 
     def update_categories(self, selection=0):
-        tables = sql.list_tables(main_window.db_main)
+        tables = sql.list_tables_with_number_of_entries(main_window.db_main)
         self.category_list.delete(0,tk.END)
-        for  entry  in tables: self.category_list.insert(tk.END ,entry[0])
+        for  entry  in tables: 
+            self.category_list.insert(tk.END, entry)
         self.category_list.selection_set(selection)
         self.change_selected_table(True)
-        if len(tables)>14:
+        if len(tables)>12:
             self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
         else:
             self.category_scrollbar.grid_forget()

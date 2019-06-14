@@ -44,6 +44,15 @@ def list_tables(db, filename=db_name):
         tables.remove(("sqlite_sequence",))
     return tables
 
+def list_tables_with_number_of_entries(db, filename=db_name):
+    db.run_cmd("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = db.get_cursor().fetchall()
+    db.commit()
+    if ("sqlite_sequence",) in tables:
+        tables.remove(("sqlite_sequence",))
+    tables_with_entries = [table[0] + " ("+str(len(retrieve_entries(db, table_name=table[0]))) + ")" for table in tables]
+    return tables_with_entries
+
 def retrieve_table(db, table_name='root', filename=db_name):
     db.run_cmd(f""" SELECT site, description, username FROM {table_name}""")
     table = db.get_cursor().fetchall()

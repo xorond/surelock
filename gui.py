@@ -4,9 +4,9 @@
 import sys
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import filedialog as filedialog
-from tkinter import messagebox as messagebox
-from tkinter import simpledialog as simpledialog
+from tkinter import filedialog
+from tkinter import messagebox
+from tkinter import simpledialog
 import os
 try:
     from libs import crypto_funcs
@@ -20,7 +20,7 @@ is_posix = False
 if os.name == 'posix':
     is_posix = True
 
-class first_window:
+class FirstWindow:
 
     def __init__(self, master):
         self.background = "light sea green"
@@ -32,7 +32,7 @@ class first_window:
         self.frame = tk.Frame(self.master)
         self.frame.config(bg = self.background)
         self.frame.pack()
-        
+
         self.file_open = tk.StringVar()
         self.password_open_1 = tk.StringVar()
         self.file_create = tk.StringVar()
@@ -120,8 +120,8 @@ class first_window:
         if file[-3:] != ".db":
             messagebox.showinfo("Error", "Please choose a Surelock Database File (*.db)!")
         elif os.path.isfile(file):
-            first_window.file= self.file_open.get()
-            first_window.masterpass = self.password_open_1.get()
+            FirstWindow.file= self.file_open.get()
+            FirstWindow.masterpass = self.password_open_1.get()
             self.master.destroy()
         else: 
             messagebox.showinfo("Error", "File does not exist!")
@@ -147,8 +147,8 @@ class first_window:
         elif os.path.isdir(directory[0]) and directory[1] != "":
             if file[-3:] != ".db":
                 file = file + ".db"
-            first_window.file = file
-            first_window.masterpass = self.password_create_1.get()
+            FirstWindow.file = file
+            FirstWindow.masterpass = self.password_create_1.get()
             self.master.destroy()
         elif not os.path.isdir(directory[0]):
             messagebox.showinfo("Error", "This Directory does not exist!")
@@ -157,7 +157,7 @@ class first_window:
             
     def start_password_generator(self):
         self.newWindow = tk.Toplevel(self.master)
-        self.app = pw_gen_window(self.newWindow)
+        self.app = PwgenWindow(self.newWindow)
         self.newWindow.transient(self.master)
         
     def exit_surelock(self):
@@ -172,7 +172,7 @@ class first_window:
             self.create.config(state = tk.DISABLED)
             
 
-class main_window:
+class MainWindow:
 
     def __init__(self, master):
         
@@ -188,7 +188,7 @@ class main_window:
         self.frame.pack()
         
         self.newWindow = tk.Toplevel(self.master)
-        self.app = first_window(self.newWindow)
+        self.app = FirstWindow(self.newWindow)
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
 
@@ -264,16 +264,16 @@ class main_window:
         if len(self.category_list.curselection()) == 1:
             self.entry_list.selection_remove(self.entry_list.selection())
             selectionnumber=self.category_list.curselection()[0]
-            table=sql.list_tables(main_window.db_main)[selectionnumber][0]
+            table=sql.list_tables(MainWindow.db_main)[selectionnumber][0]
             self.entry_list.delete(*self.entry_list.get_children())
-            for  entry  in sql.retrieve_table(main_window.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
-            if len(sql.retrieve_table(main_window.db_main, table))>8:
+            for  entry  in sql.retrieve_table(MainWindow.db_main, table): self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
+            if len(sql.retrieve_table(MainWindow.db_main, table))>8:
                 self.entry_scrollbar.grid(row=1, column =14, sticky ="nse")
             else:
                 self.entry_scrollbar.grid_forget()
                 
     def update_categories(self, selection=0):
-        tables = sql.list_tables_with_number_of_entries(main_window.db_main)
+        tables = sql.list_tables_with_number_of_entries(MainWindow.db_main)
         self.category_list.delete(0,tk.END)
         for  entry  in tables: 
             self.category_list.insert(tk.END, entry)
@@ -292,27 +292,27 @@ class main_window:
         answer = simpledialog.askstring("Add category", "Category name: ",parent=self.frame)
         if answer == None:
             return
-        elif (answer,) in sql.list_tables(main_window.db_main):
+        elif (answer,) in sql.list_tables(MainWindow.db_main):
             messagebox.showinfo("Error", "This category already exists!")
         elif answer != "":
-            sql.create_table(main_window.db_main, answer)
+            sql.create_table(MainWindow.db_main, answer)
             self.update_categories(tk.END)
         else:
             messagebox.showinfo("Error", "Category name too short!")
 
     def delete_category(self):
         answer=self.category_list.curselection()[0]
-        tables=sql.list_tables(main_window.db_main)
+        tables=sql.list_tables(MainWindow.db_main)
         if messagebox.askokcancel("Question", "Do you want to delete the category " + tables[answer][0] + "?"):
-            sql.delete_table(main_window.db_main, tables[answer][0])
+            sql.delete_table(MainWindow.db_main, tables[answer][0])
             self.update_categories()
                 
     def add_entry(self):
-        main_window.table_num = self.category_list.curselection()
+        MainWindow.table_num = self.category_list.curselection()
         self.newWindow = tk.Toplevel(self.master)
-        self.app = add_window(self.newWindow)
+        self.app = AddWindow(self.newWindow)
         self.master.wait_window(self.newWindow)
-        self.category_list.selection_set(main_window.table_num)
+        self.category_list.selection_set(MainWindow.table_num)
         self.change_selected_table(True)
         self.update_categories()
 
@@ -320,23 +320,23 @@ class main_window:
         entry = self.entry_list.focus()
         itemname = self.entry_list.item(entry)["text"]
         if messagebox.askokcancel("Question", "Do you want to delete the entry " + itemname + "?"):
-            table = sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]
-            sql.delete_entry(main_window.db_main, itemname, table)
+            table = sql.list_tables(MainWindow.db_main)[self.category_list.curselection()[0]][0]
+            sql.delete_entry(MainWindow.db_main, itemname, table)
             self.change_selected_table(True)
             self.update_categories()
         
     def show_password(self):
         entry = self.entry_list.focus()
         itemname = self.entry_list.item(entry)["text"]
-        table = sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]
-        password = sql.retrieve_entry(main_window.db_main, main_window.masterpass_main, itemname, table)
+        table = sql.list_tables(MainWindow.db_main)[self.category_list.curselection()[0]][0]
+        password = sql.retrieve_entry(MainWindow.db_main, MainWindow.masterpass_main, itemname, table)
         messagebox.showinfo("Password", "The password for {} is {}".format(itemname, password))
 
     def copy_password(self):
         entry = self.entry_list.focus()
         itemname = self.entry_list.item(entry)["text"]
-        table = sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]
-        password = sql.retrieve_entry(main_window.db_main, main_window.masterpass_main, itemname, table)
+        table = sql.list_tables(MainWindow.db_main)[self.category_list.curselection()[0]][0]
+        password = sql.retrieve_entry(MainWindow.db_main, MainWindow.masterpass_main, itemname, table)
         try:
             df=pd.DataFrame([str(password)])
             df.to_clipboard(index=False,header=False)
@@ -345,16 +345,16 @@ class main_window:
 
     def ask_to_open_or_create_database(self):
         self.newWindow = tk.Toplevel(self.master)
-        self.app = first_window(self.newWindow)
+        self.app = FirstWindow(self.newWindow)
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
         self.open_or_create_database()
 
     def open_or_create_database(self):
-        main_window.db_main=sql.Database(filename=first_window.file)
-        if len(sql.list_tables(main_window.db_main)) == 0:
-            sql.init_database(main_window.db_main)
-        main_window.masterpass_main = first_window.masterpass
+        MainWindow.db_main=sql.Database(filename=FirstWindow.file)
+        if len(sql.list_tables(MainWindow.db_main)) == 0:
+            sql.init_database(MainWindow.db_main)
+        MainWindow.masterpass_main = FirstWindow.masterpass
         self.update_categories()
         
     def change_button_activation(self,event):
@@ -383,7 +383,7 @@ class main_window:
     def open_documentation(self):
         return
 
-class add_window:
+class AddWindow:
 
     def __init__(self, master):
         self.background = "light sea green"
@@ -428,8 +428,8 @@ class add_window:
         self.password.grid(row = 2, column = 1, columnspan = 2)
         self.label = tk.Label(self.add_frame, text = "Category: ", font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground)
         self.label.grid(row = 3, column = 0, sticky = tk.E)
-        self.selected_table.set(sql.list_tables(main_window.db_main)[main_window.table_num[0]][0])
-        self.table_select = tk.OptionMenu(self.add_frame, self.selected_table, *[a[0] for a in sql.list_tables(main_window.db_main)])
+        self.selected_table.set(sql.list_tables(MainWindow.db_main)[MainWindow.table_num[0]][0])
+        self.table_select = tk.OptionMenu(self.add_frame, self.selected_table, *[a[0] for a in sql.list_tables(MainWindow.db_main)])
         self.table_select.config(width = 10, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground, activebackground = self.background, activeforeground = self.foreground)
         self.table_select["menu"].config(bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"))
         self.table_select.grid(row = 3, column = 1, sticky = tk.W)
@@ -468,13 +468,13 @@ class add_window:
         table = self.selected_table.get()
         if site == "" or username == "" or password == "":
             messagebox.showinfo("Error", "You must enter a Site, a Password and an Username!")
-        elif (site,) in sql.retrieve_entries(main_window.db_main, table):
+        elif (site,) in sql.retrieve_entries(MainWindow.db_main, table):
             answer = messagebox.askyesno("Question","The entry " + site + " already exists in the table " + table + "!\nDo you want to replace it?")
             if answer:
-                sql.insert_entry_gui(main_window.db_main, main_window.masterpass_main, site, password, description, table, username=username)
+                sql.insert_entry_gui(MainWindow.db_main, MainWindow.masterpass_main, site, password, description, table, username=username)
                 self.master.destroy()
         else:
-            sql.insert_entry_gui(main_window.db_main, main_window.masterpass_main, site, password, description, table, username=username)
+            sql.insert_entry_gui(MainWindow.db_main, MainWindow.masterpass_main, site, password, description, table, username=username)
             self.master.destroy()
         
     def generate(self):
@@ -491,7 +491,7 @@ class add_window:
     def esc(self):
         self.master.destroy()
 
-class pw_gen_window:
+class PwgenWindow:
     def __init__(self, master):
 
         self.background = "light sea green"
@@ -569,7 +569,7 @@ class pw_gen_window:
         
 def main():
     root = tk.Tk()
-    app = main_window(root)
+    app = MainWindow(root)
     root.mainloop()
 
 if __name__ == '__main__':

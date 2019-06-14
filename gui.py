@@ -303,6 +303,7 @@ class main_window:
         self.master.wait_window(self.newWindow)
         self.category_list.selection_set(main_window.table_num)
         self.change_selected_table(True)
+        self.update_categories()
 
     def delete_entry(self):
         entry = self.entry_list.focus()
@@ -311,6 +312,7 @@ class main_window:
             table = sql.list_tables(main_window.db_main)[self.category_list.curselection()[0]][0]
             sql.delete_entry(main_window.db_main, itemname, table)
             self.change_selected_table(True)
+            self.update_categories()
         
     def show_password(self):
         entry = self.entry_list.focus()

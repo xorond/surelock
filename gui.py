@@ -15,6 +15,10 @@ except Exception as e:
     print("Error: {}".format(e))
     sys.exit()
 
+is_posix = False
+if os.name == 'posix':
+    is_posix = True
+
 class first_window:
 
     def __init__(self, master):
@@ -46,7 +50,10 @@ class first_window:
         self.label.grid(row=1, column= 0, sticky = tk.E, pady=(8,0))
         self.open_file=tk.Entry(self.open_frame, textvariable=self.file_open, font = ("arial", 13), width = 45)
         self.open_file.grid(row=1, column= 1, pady=(8,0), columnspan=2)
-        self.open_file.insert(tk.END, os.getcwd() + '\surelock.db') # TODO: this isn't compatible with linux path format
+        if is_posix == False:
+            self.open_file.insert(tk.END, os.getcwd() + '\surelock.db')
+        else:
+            self.open_file.insert(tk.END, os.getcwd() + '/surelock.db')
         self.open_file_browse = tk.Button(self.open_frame, text="Browse...", command=self.open_database, bg = self.background, fg = self.foreground, font = ("arial", 8, "bold"))
         self.open_file_browse.grid(row=1, column= 3, pady=(8,0))
         self.label = tk.Label(self.open_frame, text = "Password: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
@@ -120,7 +127,10 @@ class first_window:
         
     def reset_open(self):
         self.open_file.delete(0, tk.END)
-        self.open_file.insert(tk.END, os.getcwd() + '\surelock.db')
+        if is_posix == False:
+            self.open_file.insert(tk.END, os.getcwd() + '\surelock.db')
+        else:
+            self.open_file.insert(tk.END, os.getcwd() + '/surelock.db')
         self.open_file_pwd1.delete(0, tk.END)
 
     def reset_create(self):

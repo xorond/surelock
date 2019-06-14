@@ -161,10 +161,16 @@ class first_window:
 class main_window:
 
     def __init__(self, master):
+        
+        self.background = "light sea green"
+        self.foreground = "light yellow"
+        
         self.master = master
         self.master.title("Surelock Password Manager")
-        self.master.geometry('1250x650+0+0')
+        self.master.geometry('1250x480+0+0')
+        self.master.config(bg = self.background)
         self.frame = tk.Frame(self.master)
+        self.frame.config(bg = self.background)
         self.frame.pack()
         
         self.newWindow = tk.Toplevel(self.master)
@@ -189,12 +195,12 @@ class main_window:
         self.menubar.add_cascade(label="Help",menu=self.helpmenu)
         self.master.config(menu=self.menubar) 
 
-        self.label = tk.Label(self.frame, text ="Categories:")
-        self.label.grid(row=0, column =0, sticky = tk.W)
-        self.label = tk.Label(self.frame, text ="Entries:")
-        self.label.grid(row=0, column =2, sticky = tk.W)
+        self.label = tk.Label(self.frame, text ="  Categories:", font = ("arial", 15, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row=0, column =0, sticky = tk.W, pady=(15,0))
+        self.label = tk.Label(self.frame, text ="Entries:", font = ("arial", 15, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row=0, column =2, sticky = tk.W, pady=(15,0))
 
-        self.category_list = tk.Listbox(self.frame, height = 14, width = 30)
+        self.category_list = tk.Listbox(self.frame, height = 14, width = 40)
         self.tables = sql.list_tables(main_window.db_main)
         for  entry  in self.tables: self.category_list.insert(tk.END ,entry[0])
         self.category_list.selection_set(0)
@@ -206,11 +212,11 @@ class main_window:
         if len(sql.list_tables(main_window.db_main))>14:
             self.category_scrollbar.grid(row=1, column =1, sticky ="nse")
 
-        self.add_category_button= tk.Button(self.frame, text="Add Category", command=self.add_category)
-        self.add_category_button.grid(row=2, column =0)
+        self.add_category_button= tk.Button(self.frame, text="Add Category", command=self.add_category, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.add_category_button.grid(row=2, column =0, pady=3)
 
-        self.delete_category_button= tk.Button(self.frame , text="Delete Category", command=self.delete_category)
-        self.delete_category_button.grid(row=2, column =1)
+        self.delete_category_button= tk.Button(self.frame , text="Delete Category", command=self.delete_category, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.delete_category_button.grid(row=2, column =1, pady=3, padx=3)
 
         self.entry_list = ttk.Treeview(self.frame, columns=("Username", "Password", "Description"))
         self.entry_list.heading('Username', text='Username')
@@ -223,23 +229,23 @@ class main_window:
         self.entry_list.grid(row=1, column =2, columnspan =13)
         self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
 
-        self.add_entry_button= tk.Button(self.frame, text="Add Entry", command=self.add_entry)
-        self.add_entry_button.grid(row=2, column =12)
+        self.add_entry_button= tk.Button(self.frame, text="Add Entry", width = 14, command=self.add_entry, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.add_entry_button.grid(row=2, column =12, pady=3, padx=3)
 
-        self.delete_entry_button= tk.Button(self.frame, text="Delete Entry", command=self.delete_entry)
-        self.delete_entry_button.grid(row=2, column =11)
+        self.delete_entry_button= tk.Button(self.frame, text="Delete Entry", width = 14, command=self.delete_entry, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.delete_entry_button.grid(row=2, column =11, pady=3, padx=3)
 
-        self.get_password_button= tk.Button(self.frame, text="Show Password", command=self.show_password)
-        self.get_password_button.grid(row=2, column =14)
+        self.get_password_button= tk.Button(self.frame, text="Show Password", width = 14, command=self.show_password, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.get_password_button.grid(row=2, column =14, pady=3, padx=3)
 
-        self.copy_password_button= tk.Button(self.frame, text="Copy Password to Clipboard", command=self.copy_password)
-        self.copy_password_button.grid(row=2, column =13)
+        self.copy_password_button= tk.Button(self.frame, width = 24, text="Copy Password to Clipboard", command=self.copy_password, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.copy_password_button.grid(row=2, column =13, pady=3, padx=3)
 
-        self.clear_clipboard = tk.Button(self.frame, text="Clear Clipboard", command=self.clear_clipboard)
-        self.clear_clipboard.grid(row = 3, column = 13)
+        self.clear_clipboard = tk.Button(self.frame, width = 24, text="Clear Clipboard", command=self.clear_clipboard, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.clear_clipboard.grid(row = 3, column = 13, pady=3, padx=3)
 
-        self.exit = tk.Button(self.frame, text="Exit", command=self.exit_surelock)
-        self.exit.grid(row = 3, column = 14)
+        self.exit = tk.Button(self.frame, text="Exit", width = 14, command=self.exit_surelock, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
+        self.exit.grid(row = 4, column = 14, pady=3, padx=3)
  
         self.delete_entry_button.config(state = tk.DISABLED)
         self.copy_password_button.config(state = tk.DISABLED)
@@ -387,6 +393,7 @@ class add_window:
         self.category = tk.StringVar()
         self.characters = tk.IntVar()
         self.special_characters = tk.BooleanVar()
+        self.numbers = tk.BooleanVar()
         self.selected_table = tk.StringVar()
         
         self.add_frame = tk.LabelFrame(self.frame, width = 650, height = 100, bg = self.background, bd = 10)
@@ -428,18 +435,20 @@ class add_window:
         self.label.grid(row = 0, column = 1, padx=(10,0), pady=(15,2))
         self.label = tk.Label(self.pw_gen_frame, text = "Number of characters:   ", font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground)
         self.label.grid(row = 0, column = 0, padx=(10,0), pady=(8,2))
-        self.chars = tk.Scale(self.pw_gen_frame, from_=8,to=40, orient=tk.HORIZONTAL, variable=self.characters, font = ("arial", 13, "bold"))
+        self.chars = tk.Scale(self.pw_gen_frame, from_=8,to=40, length = 150, orient=tk.HORIZONTAL, variable=self.characters, font = ("arial", 13, "bold"))
         self.chars.config(font = ("arial", 10), bg = self.background, fg = self.foreground)
         self.chars.grid(row = 0, column = 1, pady=(8,0))
         self.chars.set(16)
-        self.sp_chars=tk.Checkbutton(self.pw_gen_frame,text="Generate with special chracters", variable=self.special_characters, font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground, selectcolor = self.background, activebackground = self.background, activeforeground = self.foreground)
-        self.sp_chars.grid(row = 1, column = 0, columnspan = 2, pady=2)
+        self.sp_chars=tk.Checkbutton(self.pw_gen_frame,text="Include special chracters", variable=self.special_characters, font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground, selectcolor = self.background, activebackground = self.background, activeforeground = self.foreground)
+        self.sp_chars.grid(row = 1, column = 0, columnspan = 2, sticky = tk.W, pady=2, padx=(90,0))
+        self.ask_numbers=tk.Checkbutton(self.pw_gen_frame,text="Include numbers", variable=self.numbers, font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground, selectcolor = self.background, activebackground = self.background, activeforeground = self.foreground)
+        self.ask_numbers.grid(row = 2, column = 0, columnspan = 2, sticky = tk.W, pady=2, padx=(90,0))
         self.password_button = tk.Button(self.pw_gen_frame, text="Generate random password", command=self.generate, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
-        self.password_button.grid(row = 2, column = 0, columnspan = 2, pady=2)
+        self.password_button.grid(row = 3, column = 0, columnspan = 2, pady=2)
         
-        self.esc_button = tk.Button(self.frame, text="Exit", command=self.esc, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
+        self.esc_button = tk.Button(self.frame, text="Exit", width = 14, command=self.esc, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
         self.esc_button.grid(row = 5, column = 1)
-        
+
     def add_entry(self):
         site = self.site.get()
         username = self.username.get()
@@ -458,7 +467,7 @@ class add_window:
             self.master.destroy()
         
     def generate(self):
-        pw = crypto_funcs.pwd_gen(special_chars = self.special_characters.get(), characters = self.characters.get())
+        pw = crypto_funcs.pwd_gen(special_chars = self.special_characters.get(), numbers = self.numbers.get(), characters = self.characters.get())
         self.password.delete(0, tk.END)
         self.password.insert(tk.END, pw)
         
@@ -473,49 +482,61 @@ class add_window:
 
 class pw_gen_window:
     def __init__(self, master):
+        
+        self.background = "light sea green"
+        self.foreground = "light yellow"
+        
         self.master = master
         self.master.title("Password Generator")
-        self.master.geometry('1250x650+0+0')
+        self.master.geometry('830x470+0+0')
+        self.master.config(bg = self.background)
         self.frame = tk.Frame(self.master)
+        self.frame.config(bg = self.background)
         self.frame.pack()
         
         self.start_pwd = tk.StringVar()
         self.new_pwd = tk.StringVar()
         self.characters = tk.IntVar()
         self.special_characters = tk.BooleanVar()
+        self.numbers = tk.BooleanVar()
         
-        self.label = tk.Label(self.frame, text = "Generate a strong password based on a simple one")
-        self.label.grid(row = 0, column = 0)
-        self.label = tk.Label(self.frame, text = "Simple Password: ")
-        self.label.grid(row = 1, column = 0)
-        self.base_pwd = tk.Entry(self.frame, textvariable=self.start_pwd, show = "*")
-        self.base_pwd.grid(row = 1, column = 1)
-        self.label = tk.Label(self.frame, text = "Number of characters: ")
-        self.label.grid(row = 2, column = 0)
-        self.chars = tk.Scale(self.frame, from_=8,to=40, orient=tk.HORIZONTAL, variable=self.characters)
-        self.chars.grid(row = 2, column = 1)
+        self.label = tk.Label(self.frame, text = "Generate a strong password based on a simple one", font = ("arial", 15, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row = 0, column = 0, columnspan = 3, pady=(15,10))
+        self.label = tk.Label(self.frame, text = "Simple Password: ", font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row = 1, column = 0, sticky = tk.E, pady=3)
+        self.base_pwd = tk.Entry(self.frame, width = 50, textvariable=self.start_pwd, show = "*", font = ("arial", 13))
+        self.base_pwd.grid(row = 1, column = 1, columnspan = 2, pady=3)
+        self.label = tk.Label(self.frame, text = "Number of characters: ", font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row = 2, column = 0, sticky = tk.E, pady=3)
+        self.chars = tk.Scale(self.frame, from_=8,to=40, length = 230, orient=tk.HORIZONTAL, variable=self.characters, bg = self.background, fg = self.foreground)
+        self.chars.grid(row = 2, column = 1, sticky = tk.W, columnspan = 2, pady=3)
         self.chars.set(16)
-        self.sp_chars=tk.Checkbutton(self.frame,text="Generate with special chracters", variable=self.special_characters)
-        self.sp_chars.grid(row = 3, column = 0, columnspan = 2)
-        self.label = tk.Label(self.frame, text = "Generated Password: ")
-        self.label.grid(row = 4, column = 0)
-        self.new_pwd = tk.Entry(self.frame, width = 50, textvariable=self.new_pwd)
-        self.new_pwd.grid(row = 4, column = 1)
-        self.ok_button = tk.Button(self.frame, text="OK", command=self.generate)
-        self.ok_button.grid(row = 5, column = 0)
-        self.esc_button = tk.Button(self.frame, text="Exit", command=self.esc)
-        self.esc_button.grid(row = 6, column = 0)
-        self.copy_to_clipboard = tk.Button(self.frame, text="Copy to Clipboard", command=self.copy)
-        self.copy_to_clipboard.grid(row = 5, column = 1)
-        self.clear_clipboard = tk.Button(self.frame, text="Clear Clipboard", command=self.clear)
-        self.clear_clipboard.grid(row = 5, column = 2)
+        self.ask_sp_chars=tk.Checkbutton(self.frame,text="Include special chracters", variable=self.special_characters, font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground, selectcolor = self.background, activebackground = self.background, activeforeground = self.foreground)
+        self.ask_sp_chars.grid(row = 3, column = 1, sticky = tk.W, columnspan = 2, pady=3)
+        self.ask_numbers=tk.Checkbutton(self.frame,text="Include numbers", variable=self.numbers, font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground, selectcolor = self.background, activebackground = self.background, activeforeground = self.foreground)
+        self.ask_numbers.grid(row = 4, column = 1, sticky = tk.W, columnspan = 2, pady=3)
+        self.label = tk.Label(self.frame, text = "Generated Password: ", font = ("arial", 13, "bold"), bg = self.background, fg = self.foreground)
+        self.label.grid(row = 6, column = 0, sticky = tk.E, pady=(30,3))
+        self.new_pwd = tk.Entry(self.frame, width = 50, textvariable=self.new_pwd, font = ("arial", 13))
+        self.new_pwd.grid(row = 6, column = 1, columnspan = 2, pady=(30,3))
+        self.ok_button = tk.Button(self.frame, text="Generate Password", width = 17, command=self.generate, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
+        self.ok_button.grid(row = 5, column = 2, sticky = tk.E, pady=3)
+        self.esc_button = tk.Button(self.frame, text="Exit", command=self.esc, width = 17, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
+        self.esc_button.grid(row = 8, column = 2, sticky = tk.E, pady=10)
+        self.copy_to_clipboard = tk.Button(self.frame, text="Copy to Clipboard", width = 17, command=self.copy, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
+        self.copy_to_clipboard.grid(row = 7, column = 2, sticky = tk.E, pady=3)
+        self.clear_clipboard = tk.Button(self.frame, text="Clear Clipboard", width = 17, command=self.clear, font = ("arial", 11, "bold"), bg = self.background, fg = self.foreground)
+        self.clear_clipboard.grid(row = 7, column = 1, sticky = tk.E, pady=3, padx=15)
 
     def generate(self):
-        pw = crypto_funcs.pwd_gen(self.start_pwd.get(), self.special_characters.get(), characters = self.characters.get())
-        self.new_pwd.delete(0, tk.END)
-        self.new_pwd.config(show = "")
-        self.new_pwd.insert(tk.END, pw)
-        return pw
+        if self.start_pwd.get() == "":
+            messagebox.showinfo("Error", "You must enter a Password")
+        else:
+            pw = crypto_funcs.pwd_gen(self.start_pwd.get(), self.special_characters.get(), self.numbers.get(),characters = self.characters.get())
+            self.new_pwd.delete(0, tk.END)
+            self.new_pwd.config(show = "")
+            self.new_pwd.insert(tk.END, pw)
+            return pw
     
     def copy(self):
         try:

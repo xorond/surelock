@@ -65,7 +65,7 @@ class FirstWindow:
         self.open_file_browse.grid(row=1, column=3, pady=(8, 0))
         self.label = tk.Label(self.open_frame, text="Password: ", bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
         self.label.grid(row=2, column=0, sticky=tk.E, padx=(73, 0))
-        self.open_file_pwd1 = tk.Entry(self.open_frame, show="*", textvariable=self.password_open_1, font=("arial", 13), width=5)
+        self.open_file_pwd1 = tk.Entry(self.open_frame, show="*", textvariable=self.password_open_1, font=("arial", 13), width=45)
         self.open_file_pwd1.insert(tk.END, "1")        #This line temporarily exists to speed up testing with the default database
         self.open_file_pwd1.grid(row=2, column=1, columnspan=2)
 

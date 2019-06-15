@@ -11,10 +11,16 @@ import os
 try:
     from libs import crypto_funcs
     from libs import sql
-    import pandas as pd
-except Exception as e:
+except ImportError as e:
     print("Error: {}".format(e))
     sys.exit()
+
+try:
+    has_pandas = True
+    import pandas as pd
+except ImportError:
+    has_pandas = False
+    print("Warning: pandas library couldn't be imported")
 
 is_posix = False
 if os.name == 'posix':
@@ -337,11 +343,14 @@ class MainWindow:
         itemname = self.entry_list.item(entry)["text"]
         table = sql.list_tables(MainWindow.db_main)[self.category_list.curselection()[0]][0]
         password = sql.retrieve_entry(MainWindow.db_main, MainWindow.masterpass_main, itemname, table)
-        try:
-            df=pd.DataFrame([str(password)])
-            df.to_clipboard(index=False,header=False)
-        except Exception as e:
-            print("Error: {}".format(e))
+        if has_pandas:
+            try:
+                df=pd.DataFrame([str(password)])
+                df.to_clipboard(index=False,header=False)
+            except:
+                messagebox.showinfo("Warning", "Failed to copy to clipboard!")
+        else:
+            messagebox.showinfo("Warning", "Can't to copy to clipboard! pandas library was not found!")
 
     def ask_to_open_or_create_database(self):
         self.newWindow = tk.Toplevel(self.master)

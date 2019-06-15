@@ -29,8 +29,9 @@ if os.name == 'posix':
 class FirstWindow:
 
     def __init__(self, master):
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "dark gray"
         self.master = master
         self.master.title("Choose/Create a Database")
         self.master.geometry('830x470+0+0')
@@ -188,8 +189,9 @@ class MainWindow:
 
     def __init__(self, master):
 
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "light gray"
 
         self.master = master
         self.master.title("Surelock Password Manager")
@@ -401,8 +403,9 @@ class MainWindow:
 class AddWindow:
 
     def __init__(self, master):
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "light gray"
 
         self.master = master
         self.master.title("Add an entry")
@@ -512,8 +515,9 @@ class AddWindow:
 class PwgenWindow:
     def __init__(self, master):
 
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "light gray"
 
         self.master = master
         self.master.title("Password Generator")

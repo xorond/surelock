@@ -29,8 +29,9 @@ if os.name == 'posix':
 class FirstWindow:
 
     def __init__(self, master):
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "dark gray"
         self.master = master
         self.master.title("Choose/Create a Database")
         self.master.geometry('830x470+0+0')
@@ -188,8 +189,9 @@ class MainWindow:
 
     def __init__(self, master):
 
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "light gray"
 
         self.master = master
         self.master.title("Surelock Password Manager")
@@ -401,8 +403,9 @@ class MainWindow:
 class AddWindow:
 
     def __init__(self, master):
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "light gray"
 
         self.master = master
         self.master.title("Add an entry")
@@ -461,7 +464,7 @@ class AddWindow:
         self.label.grid(row=0, column=1, padx=(10, 0), pady=(15, 2))
         self.label = tk.Label(self.pw_gen_frame, text="Number of characters:   ", font=("arial", 13, "bold"), bg=self.background, fg=self.foreground)
         self.label.grid(row=0, column=0, padx=(10, 0), pady=(8, 2))
-        self.chars = tk.Scale(self.pw_gen_frame, from_=8, to=40, length=150, orient=tk.HORIZONTAL, variable=self.characters, font=("arial", 13, "bold"))
+        self.chars = tk.Scale(self.pw_gen_frame, from_=8, to=64, length=150, orient=tk.HORIZONTAL, variable=self.characters, font=("arial", 13, "bold"))
         self.chars.config(font=("arial", 10), bg=self.background, fg=self.foreground)
         self.chars.grid(row=0, column=1, pady=(8, 0))
         self.chars.set(16)
@@ -512,8 +515,9 @@ class AddWindow:
 class PwgenWindow:
     def __init__(self, master):
 
-        self.background = "light sea green"
-        self.foreground = "light yellow"
+        # colors
+        self.background = "black"
+        self.foreground = "light gray"
 
         self.master = master
         self.master.title("Password Generator")
@@ -537,7 +541,7 @@ class PwgenWindow:
         self.base_pwd.grid(row=1, column=1, columnspan=2, pady=3)
         self.label = tk.Label(self.frame, text="Number of characters: ", font=("arial", 13, "bold"), bg=self.background, fg=self.foreground)
         self.label.grid(row=2, column=0, sticky=tk.E, pady=3)
-        self.chars = tk.Scale(self.frame, from_=8, to=40, length=230, orient=tk.HORIZONTAL, variable=self.characters, bg=self.background, fg=self.foreground)
+        self.chars = tk.Scale(self.frame, from_=8, to=64, length=230, orient=tk.HORIZONTAL, variable=self.characters, bg=self.background, fg=self.foreground)
         self.chars.grid(row=2, column=1, sticky=tk.W, columnspan=2, pady=3)
         self.chars.set(16)
         self.ask_sp_chars = tk.Checkbutton(self.frame, text="Include special chracters", variable=self.special_characters, font=("arial", 13, "bold"), bg=self.background, fg=self.foreground, selectcolor=self.background, activebackground=self.background, activeforeground=self.foreground)

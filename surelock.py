@@ -2,6 +2,8 @@
 
 import sys
 import argparse
+import os
+# import time
 
 # handle our imports
 try:
@@ -18,6 +20,10 @@ try:
 except ImportError:
     has_pandas = False
     print("Warning: pandas library couldn't be imported")
+    
+is_posix = False
+if os.name == 'posix':
+    is_posix = True
 
 def main():
 
@@ -101,8 +107,6 @@ def main():
         else:
             pwd = common.get_pass()
             a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
-            if args.show_password:
-                print("The password is " + a)
             if has_pandas:
                 try:
                     df = pd.DataFrame([str(a)])
@@ -115,10 +119,27 @@ def main():
                     print("Warning", "Failed to copy to clipboard!")
                     if not args.show_password:
                         print("The password is " + a)
+                        input("Press enter to clear the command line!") #If preferred you can use time.sleep(10) instead of this line.
+                        if is_posix:
+                            os.system("reset")
+                        else:
+                            os.system("cls")
+            if args.show_password:
+                print("The password is " + a)
+                input("Press enter to clear the command line!") #If preferred you can use time.sleep(10) instead of this line.
+                if is_posix:
+                    os.system("reset")
+                else:
+                    os.system("cls")
             else:
                 print("Warning", "Can't to copy to clipboard! pandas library was not found!")
                 if not args.show_password:
                     print("The password is " + a)
+                    input("Press enter to clear the command line!") #If preferredyou can use time.sleep(10) instead of this line.
+                    if is_posix:
+                        os.system("reset")
+                    else:
+                        os.system("cls")
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)

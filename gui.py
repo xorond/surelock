@@ -128,7 +128,12 @@ class FirstWindow:
         elif os.path.isfile(file):
             FirstWindow.file = self.file_open.get()
             FirstWindow.masterpass = self.password_open_1.get()
-            self.master.destroy()
+            if sql.check_password(sql.Database(filename=self.file_open.get()), self.password_open_1.get()):
+                FirstWindow.file = self.file_open.get()
+                FirstWindow.masterpass = self.password_open_1.get()
+                self.master.destroy()
+            else:
+                messagebox.showinfo("Error", "This is the wrong password for the database!")
         else:
             messagebox.showinfo("Error", "File does not exist!")
 
@@ -359,9 +364,10 @@ class MainWindow:
 
     def open_or_create_database(self):
         MainWindow.db_main = sql.Database(filename=FirstWindow.file)
-        if len(sql.list_tables(MainWindow.db_main)) == 0:
-            sql.init_database(MainWindow.db_main)
         MainWindow.masterpass_main = FirstWindow.masterpass
+        sql.init_database_gui(MainWindow.db_main, MainWindow.masterpass_main)
+        if len(sql.list_tables(MainWindow.db_main)) == 0:
+            sql.add_root_table(MainWindow.db_main)
         self.update_categories()
 
     def change_button_activation(self, event):

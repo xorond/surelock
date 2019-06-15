@@ -62,18 +62,21 @@ def main():
 
     if args.subparser_name == 'init':
         db = sql.Database(filename=args.file)
-        sql.init_database(db)
+        sql.init_database_command_line(db)
+        sql.add_root_table(db)
 
     if args.subparser_name == 'add':
-        pwd = common.get_master_pass()
+        pwd = common.get_pass()
         db = sql.Database(filename=args.file)
-
-        #join the rest of the arguments into description as a single string
-        args.description = " ".join(args.description)
-
-        sql.create_table(db, args.category, args.file)
-        entrypwd = common.get_pass("Password for {}: ".format(args.entry))
-        sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
+        if sql.check_password(db, pwd):
+            #join the rest of the arguments into description as a single string
+            args.description = " ".join(args.description)
+    
+            sql.create_table(db, args.category, args.file)
+            entrypwd = common.get_pass("Password for {}: ".format(args.entry))
+            sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
+        else:
+            print("This is the wrong password for the database!")
 
     if args.subparser_name == 'view':
         db = sql.Database(filename=args.file)

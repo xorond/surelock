@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re
 import base64
-from hashlib import sha512, sha384, sha256
+import hashlib, binascii, os
 from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
@@ -64,6 +64,21 @@ def pwd_gen(start_pwd="", special_chars=True, numbers=True, upper_case=True, cha
             b=((b+characters)*n[i]*n[i-1]+i)%a
             final_pwd+=str(l[b])
         return final_pwd
+ 
+# hash_password and verify_password taken from https://www.vitoshacademy.com/hashing-passwords-in-python/
+
+def hash_password(password):
+    salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
+    pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), salt, 100000)
+    pwdhash = binascii.hexlify(pwdhash)
+    return (salt + pwdhash).decode('ascii')
+ 
+def verify_password(stored_password, provided_password):
+    salt = stored_password[:64]
+    stored_password = stored_password[64:]
+    pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('ascii'), 100000)
+    pwdhash = binascii.hexlify(pwdhash).decode('ascii')
+    return pwdhash == stored_password
 
 class Password:
     """

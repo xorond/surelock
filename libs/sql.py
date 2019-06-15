@@ -2,6 +2,7 @@
 
 import sqlite3
 from libs import crypto_funcs
+from libs import common
 
 db_name = "surelock.db"
 
@@ -32,9 +33,37 @@ def delete_entry(db, site, table_name='root'):
     db.run_cmd(f""" DELETE FROM '{table_name}' WHERE site='{site}' """)
     db.commit()
 
-def init_database(db, filename=db_name):
+def init_database_command_line(db, filename=db_name):
+    if ('hashed_password_table',) in list_all_tables(db):
+        print("Database already initiated!")
+    else:
+        password = crypto_funcs.hash_password(common.get_master_pass())
+        create_table(db, 'root', filename)
+        db.commit()
+        db.run_cmd(f""" CREATE TABLE IF NOT EXISTS hashed_password_table (hashed_password TEXT) """)
+        db.commit()
+        db.run_cmd(f""" INSERT INTO hashed_password_table (hashed_password) VALUES ('{password}') """)
+        db.commit()
+
+def init_database_gui(db, master_pass, filename=db_name):
+    if ('hashed_password_table',) not in list_all_tables(db):
+        password = crypto_funcs.hash_password(master_pass)
+        create_table(db, 'root', filename)
+        db.commit()
+        db.run_cmd(f""" CREATE TABLE IF NOT EXISTS hashed_password_table (hashed_password TEXT) """)
+        db.commit()
+        db.run_cmd(f""" INSERT INTO hashed_password_table (hashed_password) VALUES ('{password}') """)
+        db.commit()
+
+def add_root_table(db, filename=db_name):
     create_table(db, 'root', filename)
     db.commit()
+
+def check_password(db, password):
+    db.run_cmd(f""" SELECT hashed_password FROM hashed_password_table""")
+    stored_pw = db.get_cursor().fetchall()
+    db.commit()
+    return crypto_funcs.verify_password(stored_pw[0][0], password)
 
 def list_tables(db, filename=db_name):
     db.run_cmd("SELECT name FROM sqlite_master WHERE type='table'")
@@ -42,6 +71,14 @@ def list_tables(db, filename=db_name):
     db.commit()
     if ("sqlite_sequence",) in tables:
         tables.remove(("sqlite_sequence",))
+    if ('hashed_password_table',) in tables:
+        tables.remove(('hashed_password_table',))
+    return tables
+
+def list_all_tables(db, filename=db_name):
+    db.run_cmd("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = db.get_cursor().fetchall()
+    db.commit()
     return tables
 
 def list_tables_with_number_of_entries(db, filename=db_name):
@@ -50,6 +87,8 @@ def list_tables_with_number_of_entries(db, filename=db_name):
     db.commit()
     if ("sqlite_sequence",) in tables:
         tables.remove(("sqlite_sequence",))
+    if ('hashed_password_table',) in tables:
+        tables.remove(('hashed_password_table',))
     tables_with_entries = [table[0] + " ("+str(len(retrieve_entries(db, table_name=table[0]))) + ")" for table in tables]
     return tables_with_entries
 

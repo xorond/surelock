@@ -206,7 +206,7 @@ class MainWindow:
         self.menubar.add_cascade(label="File", menu=self.filemenu)
         self.helpmenu = tk.Menu(self.menubar, tearoff=0)
         self.helpmenu.add_command(label="About", command=self.open_about)
-        self.helpmenu.add_command(label="Dokumentation", command=self.open_documentation)
+        self.helpmenu.add_command(label="Documentation", command=self.open_documentation)
         self.menubar.add_cascade(label="Help", menu=self.helpmenu)
         self.master.config(menu=self.menubar)
 
@@ -239,26 +239,26 @@ class MainWindow:
         self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
         self.entry_scrollbar.config(command=self.entry_list.yview)
 
-        self.entry_list.grid(row=1, column=2, columnspan=13, sticky="sn")
+        self.entry_list.grid(row=1, column=2, columnspan=5, sticky="sn")
         self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
 
         self.add_entry_button = tk.Button(self.frame, text="Add Entry", width=14, command=self.add_entry, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.add_entry_button.grid(row=2, column=12, pady=3, padx=3)
+        self.add_entry_button.grid(row=2, column=4, pady=3, padx=3)
 
         self.delete_entry_button = tk.Button(self.frame, text="Delete Entry", width=14, command=self.delete_entry, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.delete_entry_button.grid(row=2, column=11, pady=3, padx=3)
+        self.delete_entry_button.grid(row=2, column=3, pady=3, padx=3)
 
         self.get_password_button = tk.Button(self.frame, text="Show Password", width=14, command=self.show_password, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.get_password_button.grid(row=2, column=14, pady=3, padx=3)
+        self.get_password_button.grid(row=2, column=6, pady=3, padx=3)
 
         self.copy_password_button = tk.Button(self.frame, width=24, text="Copy Password to Clipboard", command=self.copy_password, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.copy_password_button.grid(row=2, column=13, pady=3, padx=3)
+        self.copy_password_button.grid(row=2, column=5, pady=3, padx=3)
 
         self.clear_clipboard_button = tk.Button(self.frame, width=24, text="Clear Clipboard", command=self.clear_clipboard, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.clear_clipboard_button.grid(row=3, column=13, pady=3, padx=3)
+        self.clear_clipboard_button.grid(row=3, column=5, pady=3, padx=3)
 
         self.exit = tk.Button(self.frame, text="Exit", width=14, command=self.exit_surelock, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.exit.grid(row=4, column=14, pady=3, padx=3)
+        self.exit.grid(row=4, column=6, pady=3, padx=3)
 
         self.delete_entry_button.config(state=tk.DISABLED)
         self.copy_password_button.config(state=tk.DISABLED)

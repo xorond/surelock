@@ -80,12 +80,15 @@ def main():
         if sql.check_password(db, pwd):
             #join the rest of the arguments into description as a single string
             args.description = " ".join(args.description)
-            sql.create_table(db, args.category, args.file)
-            if args.random_password:
-                entrypwd = crypto_funcs.pwd_gen("", args.special_characters, args.numbers, characters=args.number_of_characters)
+            if args.category == 'hashed_password_table' or args.category == "sqlite_sequence":
+                print("This category cannot be created!")
             else:
-                entrypwd = common.get_pass("Password for {}: ".format(args.entry))
-            sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
+                sql.create_table(db, args.category, args.file)
+                if args.random_password:
+                    entrypwd = crypto_funcs.pwd_gen("", args.special_characters, args.numbers, characters=args.number_of_characters)
+                else:
+                    entrypwd = common.get_pass("Password for {}: ".format(args.entry))
+                sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
         else:
             print("This is the wrong password for the database!")
 
@@ -138,7 +141,10 @@ def main():
 
     if args.subparser_name == 'add_category':
         db = sql.Database(filename=args.file)
-        sql.create_table(db, args.category, args.file)
+        if args.category == 'hashed_password_table' or args.category == "sqlite_sequence":
+            print("This category cannot be created!")
+        else:
+            sql.create_table(db, args.category, args.file)
 
     if args.subparser_name == 'delete_category':
         db = sql.Database(filename=args.file)

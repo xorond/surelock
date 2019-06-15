@@ -30,7 +30,8 @@ def main():
     parser_add.add_argument("entry", help="name of the new entry", type=str)
     parser_add.add_argument("username" , help="username for the entry", default="", type=str)
     parser_add.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
-    parser_add.add_argument("-d", "--description" , help="description of the entry", default="", type=str, nargs='*')
+    parser_add.add_argument("-r","--random_password", help="store a random password with this entry", action='store_true')
+    parser_add.add_argument("-d","--description" , help="description of the entry", default="", type=str, nargs='*')
 
     parser_view = subparsers.add_parser('view', help='view a password')
     parser_view.add_argument("entry", help="the entry for which you want to view the password", type=str)
@@ -58,6 +59,12 @@ def main():
     parser_delete_category.add_argument("category", help="name of the category you want to delete", type=str, default="root")
     parser_delete_category.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
 
+    parser_pwgen = subparsers.add_parser('pwgen', help='Generate a strong password based on a simple one')
+    parser_pwgen.add_argument("simple_password", help="simple password", type=str)
+    parser_pwgen.add_argument("number_of_characters" , help="number of characters in the generated password", default=16, type=int, nargs='?')
+    parser_pwgen.add_argument("-s","--special_characters", help="includes special characters in the generated password", action='store_true')
+    parser_pwgen.add_argument("-n","--numbers", help="includes numbers in the generated password", action='store_true')
+
     args = parser.parse_args()
 
     if args.subparser_name == 'init':
@@ -71,9 +78,11 @@ def main():
         if sql.check_password(db, pwd):
             #join the rest of the arguments into description as a single string
             args.description = " ".join(args.description)
-    
             sql.create_table(db, args.category, args.file)
-            entrypwd = common.get_pass("Password for {}: ".format(args.entry))
+            if args.random_password:
+                entrypwd = crypto_funcs.pwd_gen()
+            else:
+                entrypwd = common.get_pass("Password for {}: ".format(args.entry))
             sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
         else:
             print("This is the wrong password for the database!")
@@ -127,6 +136,9 @@ def main():
     if args.subparser_name == 'delete_category':
         db = sql.Database(filename=args.file)
         sql.delete_table(db, args.category, args.file)
+
+    if args.subparser_name == 'pwgen':
+        print(crypto_funcs.pwd_gen(args.simple_password, args.special_characters, args.numbers, characters=args.number_of_characters))
 
     # handle no arguments
     if len(sys.argv[1:]) == 0:

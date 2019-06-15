@@ -64,10 +64,8 @@ def pwd_gen(start_pwd="", special_chars=True, numbers=True, upper_case=True, cha
             final_pwd+=str(l[b])
     if special_chars and len(set([x for x in final_pwd]).intersection(set(special))) == 0:
         final_pwd = final_pwd[:2] + special[len(start_pwd)*characters%26] + final_pwd[3:]
-        print(123)
     if numbers and len(set([x for x in final_pwd]).intersection(set(num))) == 0:
         final_pwd = final_pwd[:4] + num[len(start_pwd)*characters%10] + final_pwd[5:]
-        print(1)
     return final_pwd
         
  

@@ -19,7 +19,6 @@ except ImportError:
     has_pandas = False
     print("Warning: pandas library couldn't be imported")
 
-
 def main():
 
     parser = argparse.ArgumentParser(prog='surelock')
@@ -31,6 +30,9 @@ def main():
     parser_add.add_argument("username" , help="username for the entry", default="", type=str)
     parser_add.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
     parser_add.add_argument("-r","--random_password", help="store a random password with this entry", action='store_true')
+    parser_add.add_argument("-c","--number_of_characters" , help="number of characters in the random password", default=16, type=int)
+    parser_add.add_argument("-s","--special_characters", help="includes special characters in the random password", action='store_true')
+    parser_add.add_argument("-n","--numbers", help="includes numbers in the random password", action='store_true')
     parser_add.add_argument("-d","--description" , help="description of the entry", default="", type=str, nargs='*')
 
     parser_view = subparsers.add_parser('view', help='view a password')
@@ -80,7 +82,7 @@ def main():
             args.description = " ".join(args.description)
             sql.create_table(db, args.category, args.file)
             if args.random_password:
-                entrypwd = crypto_funcs.pwd_gen()
+                entrypwd = crypto_funcs.pwd_gen("", args.special_characters, args.numbers, characters=args.number_of_characters)
             else:
                 entrypwd = common.get_pass("Password for {}: ".format(args.entry))
             sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
@@ -95,15 +97,20 @@ def main():
         else:
             pwd = common.get_pass()
             a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
-            print(a)
             if has_pandas:
                 try:
                     df = pd.DataFrame([str(a)])
                     df.to_clipboard(index=False, header=False)
+                    print("The password was copied to the clipboard!")
+                    input("Press enter to clear the clipboard!")
+                    df = pd.DataFrame([])
+                    df.to_clipboard(index=False, header=False)
                 except Exception:
                     print("Warning", "Failed to copy to clipboard!")
+                    print("The password is " + a)
             else:
                 print("Warning", "Can't to copy to clipboard! pandas library was not found!")
+                print("The password is " + a)
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)

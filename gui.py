@@ -30,11 +30,11 @@ class FirstWindow:
 
     def __init__(self, master):
         # colors
-        self.background = "black"
-        self.foreground = "dark gray"
+        self.background = "#151515"
+        self.foreground = "light gray"
 
         self.buttonbg = "light gray"
-        self.buttonfg = "black"
+        self.buttonfg = "#151515"
 
         self.master = master
         self.master.title("Choose/Create a Database")
@@ -215,11 +215,11 @@ class MainWindow:
     def __init__(self, master):
 
         # colors
-        self.background = "black"
+        self.background = "#151515"
         self.foreground = "light gray"
 
         self.buttonbg = "light gray"
-        self.buttonfg = "black"
+        self.buttonfg = "#151515"
 
         self.master = master
         self.master.title("Surelock Password Manager")
@@ -432,11 +432,11 @@ class AddWindow:
 
     def __init__(self, master):
         # colors
-        self.background = "black"
+        self.background = "#151515"
         self.foreground = "light gray"
 
         self.buttonbg = "light gray"
-        self.buttonfg = "black"
+        self.buttonfg = "#151515"
 
         self.master = master
         self.master.title("Add an entry")
@@ -547,11 +547,11 @@ class PwgenWindow:
     def __init__(self, master):
 
         # colors
-        self.background = "black"
+        self.background = "#151515"
         self.foreground = "light gray"
 
         self.buttonbg = "light gray"
-        self.buttonfg = "black"
+        self.buttonfg = "#151515"
 
         self.master = master
         self.master.title("Password Generator")

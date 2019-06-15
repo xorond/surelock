@@ -172,6 +172,7 @@ class FirstWindow:
         self.newWindow.transient(self.master)
 
     def exit_surelock(self):
+        FirstWindow.file = "?"
         self.master.master.destroy()
 
     def check_passwords(self):
@@ -202,74 +203,74 @@ class MainWindow:
         self.app = FirstWindow(self.newWindow)
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
+        if FirstWindow.file != "?":
+            self.menubar = tk.Menu(self.frame)
+            self.filemenu = tk.Menu(self.menubar, tearoff=0)
+            self.filemenu.add_command(label="Open/Create Database", command=self.ask_to_open_or_create_database)
+            self.filemenu.add_separator()
+            self.filemenu.add_command(label="Exit", command=self.exit_surelock)
+            self.menubar.add_cascade(label="File", menu=self.filemenu)
+            self.helpmenu = tk.Menu(self.menubar, tearoff=0)
+            self.helpmenu.add_command(label="About", command=self.open_about)
+            self.helpmenu.add_command(label="Documentation", command=self.open_documentation)
+            self.menubar.add_cascade(label="Help", menu=self.helpmenu)
+            self.master.config(menu=self.menubar)
 
-        self.menubar = tk.Menu(self.frame)
-        self.filemenu = tk.Menu(self.menubar, tearoff=0)
-        self.filemenu.add_command(label="Open/Create Database", command=self.ask_to_open_or_create_database)
-        self.filemenu.add_separator()
-        self.filemenu.add_command(label="Exit", command=self.exit_surelock)
-        self.menubar.add_cascade(label="File", menu=self.filemenu)
-        self.helpmenu = tk.Menu(self.menubar, tearoff=0)
-        self.helpmenu.add_command(label="About", command=self.open_about)
-        self.helpmenu.add_command(label="Documentation", command=self.open_documentation)
-        self.menubar.add_cascade(label="Help", menu=self.helpmenu)
-        self.master.config(menu=self.menubar)
+            self.label = tk.Label(self.frame, text="Categories:", font=("arial", 15, "bold"), bg=self.background, fg=self.foreground)
+            self.label.grid(row=0, column=0, sticky=tk.W, pady=(15, 0))
+            self.label = tk.Label(self.frame, text="Entries:", font=("arial", 15, "bold"), bg=self.background, fg=self.foreground)
+            self.label.grid(row=0, column=2, sticky=tk.W, pady=(15, 0))
 
-        self.label = tk.Label(self.frame, text="Categories:", font=("arial", 15, "bold"), bg=self.background, fg=self.foreground)
-        self.label.grid(row=0, column=0, sticky=tk.W, pady=(15, 0))
-        self.label = tk.Label(self.frame, text="Entries:", font=("arial", 15, "bold"), bg=self.background, fg=self.foreground)
-        self.label.grid(row=0, column=2, sticky=tk.W, pady=(15, 0))
+            self.category_list = tk.Listbox(self.frame, height=12, width=30, activestyle="none", font=("arial", 12))
+            self.category_list.grid(row=1, column=0, columnspan=2)
+            self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
 
-        self.category_list = tk.Listbox(self.frame, height=12, width=30, activestyle="none", font=("arial", 12))
-        self.category_list.grid(row=1, column=0, columnspan=2)
-        self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
+            self.category_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
+            self.category_scrollbar.config(command=self.category_list.yview)
 
-        self.category_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
-        self.category_scrollbar.config(command=self.category_list.yview)
+            self.add_category_button = tk.Button(self.frame, text="Add Category", command=self.add_category, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.add_category_button.grid(row=2, column=0, pady=3)
 
-        self.add_category_button = tk.Button(self.frame, text="Add Category", command=self.add_category, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.add_category_button.grid(row=2, column=0, pady=3)
+            self.delete_category_button = tk.Button(self.frame, text="Delete Category", command=self.delete_category, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.delete_category_button.grid(row=2, column=1, pady=3, padx=3)
 
-        self.delete_category_button = tk.Button(self.frame, text="Delete Category", command=self.delete_category, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.delete_category_button.grid(row=2, column=1, pady=3, padx=3)
+            self.style = ttk.Style()
+            self.style.configure("Treeview", font=('Arial', 12), rowheight=25)
+            self.style.configure("Treeview.Heading", font=('Arial', 13, 'bold'))
+            self.entry_list = ttk.Treeview(self.frame, style="Treeview", columns=("Username", "Password", "Description"), height=5)
+            self.entry_list.heading('Username', text='Username')
+            self.entry_list.heading('Password', text='Password')
+            self.entry_list.heading('Description', text='Description')
+            self.entry_list.heading('#0', text='Site')
+            self.entry_list.grid(row=1, column=2, columnspan=5, sticky="sn")
+            self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
 
-        self.style = ttk.Style()
-        self.style.configure("Treeview", font=('Arial', 12), rowheight=25)
-        self.style.configure("Treeview.Heading", font=('Arial', 13, 'bold'))
-        self.entry_list = ttk.Treeview(self.frame, style="Treeview", columns=("Username", "Password", "Description"), height=5)
-        self.entry_list.heading('Username', text='Username')
-        self.entry_list.heading('Password', text='Password')
-        self.entry_list.heading('Description', text='Description')
-        self.entry_list.heading('#0', text='Site')
-        self.entry_list.grid(row=1, column=2, columnspan=5, sticky="sn")
-        self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
+            self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
+            self.entry_scrollbar.config(command=self.entry_list.yview)
 
-        self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
-        self.entry_scrollbar.config(command=self.entry_list.yview)
+            self.add_entry_button = tk.Button(self.frame, text="Add Entry", width=14, command=self.add_entry, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.add_entry_button.grid(row=2, column=4, pady=3, padx=3)
 
-        self.add_entry_button = tk.Button(self.frame, text="Add Entry", width=14, command=self.add_entry, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.add_entry_button.grid(row=2, column=4, pady=3, padx=3)
+            self.delete_entry_button = tk.Button(self.frame, text="Delete Entry", width=14, command=self.delete_entry, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.delete_entry_button.grid(row=2, column=3, pady=3, padx=3)
 
-        self.delete_entry_button = tk.Button(self.frame, text="Delete Entry", width=14, command=self.delete_entry, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.delete_entry_button.grid(row=2, column=3, pady=3, padx=3)
+            self.get_password_button = tk.Button(self.frame, text="Show Password", width=14, command=self.show_password, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.get_password_button.grid(row=2, column=6, pady=3, padx=3)
 
-        self.get_password_button = tk.Button(self.frame, text="Show Password", width=14, command=self.show_password, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.get_password_button.grid(row=2, column=6, pady=3, padx=3)
+            self.copy_password_button = tk.Button(self.frame, width=24, text="Copy Password to Clipboard", command=self.copy_password, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.copy_password_button.grid(row=2, column=5, pady=3, padx=3)
 
-        self.copy_password_button = tk.Button(self.frame, width=24, text="Copy Password to Clipboard", command=self.copy_password, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.copy_password_button.grid(row=2, column=5, pady=3, padx=3)
+            self.clear_clipboard_button = tk.Button(self.frame, width=24, text="Clear Clipboard", command=self.clear_clipboard, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.clear_clipboard_button.grid(row=3, column=5, pady=3, padx=3)
 
-        self.clear_clipboard_button = tk.Button(self.frame, width=24, text="Clear Clipboard", command=self.clear_clipboard, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.clear_clipboard_button.grid(row=3, column=5, pady=3, padx=3)
+            self.exit = tk.Button(self.frame, text="Exit", width=14, command=self.exit_surelock, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+            self.exit.grid(row=4, column=6, pady=3, padx=3)
 
-        self.exit = tk.Button(self.frame, text="Exit", width=14, command=self.exit_surelock, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
-        self.exit.grid(row=4, column=6, pady=3, padx=3)
+            self.delete_entry_button.config(state=tk.DISABLED)
+            self.copy_password_button.config(state=tk.DISABLED)
+            self.get_password_button.config(state=tk.DISABLED)
 
-        self.delete_entry_button.config(state=tk.DISABLED)
-        self.copy_password_button.config(state=tk.DISABLED)
-        self.get_password_button.config(state=tk.DISABLED)
-
-        self.open_or_create_database()
+            self.open_or_create_database()
 
     def change_selected_table(self, event):
         if len(self.category_list.curselection()) == 1:
@@ -360,7 +361,8 @@ class MainWindow:
         self.app = FirstWindow(self.newWindow)
         self.newWindow.transient(self.master)
         self.master.wait_window(self.newWindow)
-        self.open_or_create_database()
+        if FirstWindow.file != "?":
+            self.open_or_create_database()
 
     def open_or_create_database(self):
         MainWindow.db_main = sql.Database(filename=FirstWindow.file)

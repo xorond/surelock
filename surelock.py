@@ -38,7 +38,7 @@ def main():
     parser_view = subparsers.add_parser('view', help='view a password')
     parser_view.add_argument("entry", help="the entry for which you want to view the password", type=str)
     parser_view.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
-    parser_view.add_argument("-s","show_password", help="show the password in the console", action='store_true')
+    parser_view.add_argument("-s","--show_password", help="show the password in the console", action='store_true')
     parser_view.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
 
     parser_del = subparsers.add_parser('del', help='delete an entry')

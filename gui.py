@@ -63,15 +63,15 @@ class FirstWindow:
             self.slash = "\\"
         else:
             self.slash = "/"
-        self.path = os.getcwd() + self.slash + "config_surelock.txt"
+        self.path = os.getcwd() + self.slash + "surelock.conf"
         if not os.path.isfile(self.path):
-            self.file = open(r"config_surelock.txt","w")
+            self.file = open(r"surelock.conf","w")
             if is_posix == False:
                 self.file.write(os.getcwd() + '\surelock.db')
             else:
                 self.file.write(os.getcwd() + '/surelock.db')
             self.file.close()
-        self.file = open(r"config_surelock.txt","r")
+        self.file = open(r"surelock.conf","r")
         self.open_file.insert(tk.END, self.file.read())
         self.file.close()
         
@@ -155,7 +155,7 @@ class FirstWindow:
 
     def reset_open(self):
         self.open_file.delete(0, tk.END)
-        self.file = open(r"config_surelock.txt","r")
+        self.file = open(r"surelock.conf","r")
         self.open_file.insert(tk.END, self.file.read())
         self.file.close()
         self.open_file_pwd1.delete(0, tk.END)
@@ -187,7 +187,7 @@ class FirstWindow:
         self.newWindow.transient(self.master)
 
     def set_default(self):
-        file = open(r"config_surelock.txt","w")
+        file = open(r"surelock.conf","w")
         file.seek(0)
         file.truncate()
         file.write(self.file_open.get())

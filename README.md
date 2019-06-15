@@ -10,7 +10,7 @@ Siehe [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md)
 
 ## Features: 
 - [x] Mittels Kommandozeile,
-- [ ] oder Benutzeroberfläche (Tkinter) verwendbar.
+- [x] oder Benutzeroberfläche (Tkinter) verwendbar.
 - [x] Verschiedene Kryptographie-Libraries werden verwendet.
 - [x] Eine SQL-Library (voraussichtlich sqlite3) wird benutzt. 
 - [x] Lokale verschlüsselte SQL Datenbank, die mit einem Master-Passwort geschützt wird, um die anderen Passwörter zu sichern.

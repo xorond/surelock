@@ -34,9 +34,9 @@ class FirstWindow:
         self.master = master
         self.master.title("Choose/Create a Database")
         self.master.geometry('830x470+0+0')
-        self.master.config(bg = self.background)
+        self.master.config(bg=self.background)
         self.frame = tk.Frame(self.master)
-        self.frame.config(bg = self.background)
+        self.frame.config(bg=self.background)
         self.frame.pack()
 
         self.file_open = tk.StringVar()
@@ -44,77 +44,77 @@ class FirstWindow:
         self.file_create = tk.StringVar()
         self.password_create_1 = tk.StringVar()
         self.password_create_2 = tk.StringVar()
-        
-        self.open_frame = tk.LabelFrame(self.frame, width = 650, height = 100, bg = self.background, bd = 10)
-        self.open_frame.grid(row=2, column= 0, columnspan=2, ipadx = 10, ipady = 3)
-        self.create_frame = tk.LabelFrame(self.frame, width = 650, height = 100, bg = self.background, bd = 10)
-        self.create_frame.grid(row=4, column= 0, columnspan=2, ipadx = 10, ipady = 3)
-        
-        self.label = tk.Label(self.frame, text = "Open an existing Database", font = ("arial", 20, "bold"), bg = self.background, fg = self.foreground)
-        self.label.grid(row=0, column= 0, columnspan=2, pady=(15,0))
-        
-        self.label = tk.Label(self.open_frame, text = "File: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
-        self.label.grid(row=1, column= 0, sticky = tk.E, pady=(8,0))
-        self.open_file=tk.Entry(self.open_frame, textvariable=self.file_open, font = ("arial", 13), width = 45)
-        self.open_file.grid(row=1, column= 1, pady=(8,0), columnspan=2)
+
+        self.open_frame = tk.LabelFrame(self.frame, width=650, height=100, bg=self.background, bd=10)
+        self.open_frame.grid(row=2, column=0, columnspan=2, ipadx=10, ipady=3)
+        self.create_frame = tk.LabelFrame(self.frame, width=650, height=100, bg=self.background, bd=10)
+        self.create_frame.grid(row=4, column=0, columnspan=2, ipadx=10, ipady=3)
+
+        self.label = tk.Label(self.frame, text="Open an existing Database", font=("arial", 20, "bold"), bg=self.background, fg=self.foreground)
+        self.label.grid(row=0, column=0, columnspan=2, pady=(15, 0))
+
+        self.label = tk.Label(self.open_frame, text="File: ", bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+        self.label.grid(row=1, column=0, sticky=tk.E, pady=(8, 0))
+        self.open_file = tk.Entry(self.open_frame, textvariable=self.file_open, font=("arial", 13), width=45)
+        self.open_file.grid(row=1, column=1, pady=(8, 0), columnspan=2)
         if is_posix == False:
             self.open_file.insert(tk.END, os.getcwd() + '\surelock.db')
         else:
             self.open_file.insert(tk.END, os.getcwd() + '/surelock.db')
-        self.open_file_browse = tk.Button(self.open_frame, text="Browse...", command=self.open_database, bg = self.background, fg = self.foreground, font = ("arial", 8, "bold"))
-        self.open_file_browse.grid(row=1, column= 3, pady=(8,0))
-        self.label = tk.Label(self.open_frame, text = "Password: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
-        self.label.grid(row=2, column= 0, sticky = tk.E, padx=(73,0))
-        self.open_file_pwd1=tk.Entry(self.open_frame, show="*", textvariable=self.password_open_1, font = ("arial", 13), width = 45)
+        self.open_file_browse = tk.Button(self.open_frame, text="Browse...", command=self.open_database, bg=self.background, fg=self.foreground, font=("arial", 8, "bold"))
+        self.open_file_browse.grid(row=1, column=3, pady=(8, 0))
+        self.label = tk.Label(self.open_frame, text="Password: ", bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+        self.label.grid(row=2, column=0, sticky=tk.E, padx=(73, 0))
+        self.open_file_pwd1 = tk.Entry(self.open_frame, show="*", textvariable=self.password_open_1, font=("arial", 13), width=5)
         self.open_file_pwd1.insert(tk.END, "1")        #This line temporarily exists to speed up testing with the default database
-        self.open_file_pwd1.grid(row=2, column= 1, columnspan=2)
-        
-        self.open_button = tk.Button(self.open_frame, text = 'Open', command = self.next_window_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.open_file_pwd1.grid(row=2, column=1, columnspan=2)
+
+        self.open_button = tk.Button(self.open_frame, text='Open', command=self.next_window_open, bg=self.background, fg=self.foreground, font=("arial", 11, "bold"), width=10)
         self.open_button.grid(row=3, column=2, pady=2)
-        self.reset_button = tk.Button(self.open_frame, text = 'Reset', command = self.reset_open, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.reset_button = tk.Button(self.open_frame, text='Reset', command=self.reset_open, bg=self.background, fg=self.foreground, font=("arial", 11, "bold"), width=10)
         self.reset_button.grid(row=3, column=1, pady=2)
 
-        self.label = tk.Label(self.frame, text = "Create a new Database", font = ("arial", 20, "bold"), bg = self.background, fg = self.foreground)
-        self.label.grid(row=3, column= 0, columnspan=2, pady=(15,0))
-        
-        self.label = tk.Label(self.create_frame, text = "File: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
-        self.label.grid(row=0, column= 0, sticky = tk.E, pady=(8,0))
-        self.create_file=tk.Entry(self.create_frame, textvariable=self.file_create, font = ("arial", 13), width = 45)
-        self.create_file.grid(row=0, column= 1, columnspan=2, pady=(8,0))
-        self.create_file_browse = tk.Button(self.create_frame, text="Browse...", command=self.create_database, bg = self.background, fg = self.foreground, font = ("arial", 8, "bold"))
-        self.create_file_browse.grid(row=0, column= 3, pady=(8,0))
-        self.label = tk.Label(self.create_frame, text = "Password: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
-        self.label.grid(row=1, column= 0, sticky = tk.E)
-        self.create_file_pwd1=tk.Entry(self.create_frame, show="*", textvariable=self.password_create_1, font = ("arial", 13), width = 45)
-        self.create_file_pwd1.grid(row=1, column= 1, columnspan=2)
-        self.label = tk.Label(self.create_frame, text = "  Repeat Password: ", bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"))
-        self.label.grid(row=2, column= 0, sticky = tk.E)
-        self.create_file_pwd2=tk.Entry(self.create_frame, show="*", textvariable=self.password_create_2, font = ("arial", 13), width = 45)
-        self.create_file_pwd2.grid(row=2, column= 1, columnspan=2)
-        
-        self.label1 = tk.Label(self.create_frame, text = "Passwords do not match! ", bg = self.background, fg = self.background, font = ("arial", 13, "bold"))
-        self.label1.grid(row=3, column= 1, columnspan=2)
-        
-        self.create = tk.Button(self.create_frame, text = 'Create', command = self.next_window_create, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.label = tk.Label(self.frame, text="Create a new Database", font=("arial", 20, "bold"), bg=self.background, fg=self.foreground)
+        self.label.grid(row=3, column=0, columnspan=2, pady=(15, 0))
+
+        self.label = tk.Label(self.create_frame, text="File: ", bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+        self.label.grid(row=0, column=0, sticky=tk.E, pady=(8, 0))
+        self.create_file = tk.Entry(self.create_frame, textvariable=self.file_create, font=("arial", 13), width=45)
+        self.create_file.grid(row=0, column=1, columnspan=2, pady=(8, 0))
+        self.create_file_browse = tk.Button(self.create_frame, text="Browse...", command=self.create_database, bg=self.background, fg=self.foreground, font=("arial", 8, "bold"))
+        self.create_file_browse.grid(row=0, column=3, pady=(8, 0))
+        self.label = tk.Label(self.create_frame, text="Password: ", bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+        self.label.grid(row=1, column=0, sticky=tk.E)
+        self.create_file_pwd1 = tk.Entry(self.create_frame, show="*", textvariable=self.password_create_1, font=("arial", 13), width=45)
+        self.create_file_pwd1.grid(row=1, column=1, columnspan=2)
+        self.label = tk.Label(self.create_frame, text="  Repeat Password: ", bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
+        self.label.grid(row=2, column=0, sticky=tk.E)
+        self.create_file_pwd2 = tk.Entry(self.create_frame, show="*", textvariable=self.password_create_2, font=("arial", 13), width=45)
+        self.create_file_pwd2.grid(row=2, column=1, columnspan=2)
+
+        self.label1 = tk.Label(self.create_frame, text="Passwords do not match! ", bg=self.background, fg=self.background, font=("arial", 13, "bold"))
+        self.label1.grid(row=3, column=1, columnspan=2)
+
+        self.create = tk.Button(self.create_frame, text='Create', command=self.next_window_create, bg=self.background, fg=self.foreground, font=("arial", 11, "bold"), width=10)
         self.create.grid(row=8, column=2, pady=2)
-        self.reset = tk.Button(self.create_frame, text = 'Reset', command = self.reset_create, bg = self.background, fg = self.foreground, font = ("arial", 11, "bold"), width = 10)
+        self.reset = tk.Button(self.create_frame, text='Reset', command=self.reset_create, bg=self.background, fg=self.foreground, font=("arial", 11, "bold"), width=10)
         self.reset.grid(row=8, column=1, pady=2)
 
-        self.exit = tk.Button(self.frame, text = 'Exit', command = self.exit_surelock, bg = self.background, fg = self.foreground, font = ("arial", 13, "bold"), width = 10)
+        self.exit = tk.Button(self.frame, text='Exit', command=self.exit_surelock, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"), width=10)
         self.exit.grid(row=9, column=1, pady=20)
 
         self.pw_gen = tk.Button(self.frame, text='Password Generator', command=self.start_password_generator, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"), width=20)
         self.pw_gen.grid(row=9, column=0, pady=20)
 
-        self.password_create_1.trace("w", lambda x,y,z: self.check_passwords())
-        self.password_create_2.trace("w", lambda x,y,z: self.check_passwords())
+        self.password_create_1.trace("w", lambda x, y, z: self.check_passwords())
+        self.password_create_2.trace("w", lambda x, y, z: self.check_passwords())
 
         self.master.protocol("WM_DELETE_WINDOW", self.exit_surelock)
 
     def open_database(self):
-        filename = filedialog.askopenfilename(filetypes=(("Database files", "*.db"),("All files", "*.*") ))
-        self.open_file.delete(0,tk.END)
-        self.open_file.insert(0,filename)
+        filename = filedialog.askopenfilename(filetypes=(("Database files", "*.db"), ("All files", "*.*")))
+        self.open_file.delete(0, tk.END)
+        self.open_file.insert(0, filename)
 
     def create_database(self):
         filename = filedialog.asksaveasfilename(filetypes=(("Database files", "*.db"), ("All files", "*.*")))
@@ -126,12 +126,12 @@ class FirstWindow:
         if file[-3:] != ".db":
             messagebox.showinfo("Error", "Please choose a Surelock Database File (*.db)!")
         elif os.path.isfile(file):
-            FirstWindow.file= self.file_open.get()
+            FirstWindow.file = self.file_open.get()
             FirstWindow.masterpass = self.password_open_1.get()
             self.master.destroy()
-        else: 
+        else:
             messagebox.showinfo("Error", "File does not exist!")
-        
+
     def reset_open(self):
         self.open_file.delete(0, tk.END)
         if is_posix == False:
@@ -160,23 +160,23 @@ class FirstWindow:
             messagebox.showinfo("Error", "This Directory does not exist!")
         else:
             messagebox.showinfo("Error", "Filename is empty!")
-            
+
     def start_password_generator(self):
         self.newWindow = tk.Toplevel(self.master)
         self.app = PwgenWindow(self.newWindow)
         self.newWindow.transient(self.master)
-        
+
     def exit_surelock(self):
         self.master.master.destroy()
 
     def check_passwords(self):
         if self.password_create_1.get() == self.password_create_2.get():
-            self.label1.config(fg = self.background)
-            self.create.config(state = tk.NORMAL)
+            self.label1.config(fg=self.background)
+            self.create.config(state=tk.NORMAL)
         else:
-            self.label1.config(fg = "orange")
-            self.create.config(state = tk.DISABLED)
-            
+            self.label1.config(fg="orange")
+            self.create.config(state=tk.DISABLED)
+
 
 class MainWindow:
 

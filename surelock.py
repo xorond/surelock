@@ -38,6 +38,7 @@ def main():
     parser_view = subparsers.add_parser('view', help='view a password')
     parser_view.add_argument("entry", help="the entry for which you want to view the password", type=str)
     parser_view.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
+    parser_view.add_argument("-s","show_password", help="show the password in the console", action='store_true')
     parser_view.add_argument("-f","--file" , help="name of the database file", type=str, default="surelock.db")
 
     parser_del = subparsers.add_parser('del', help='delete an entry')
@@ -100,6 +101,8 @@ def main():
         else:
             pwd = common.get_pass()
             a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
+            if args.show_password:
+                print("The password is " + a)
             if has_pandas:
                 try:
                     df = pd.DataFrame([str(a)])
@@ -110,10 +113,12 @@ def main():
                     df.to_clipboard(index=False, header=False)
                 except Exception:
                     print("Warning", "Failed to copy to clipboard!")
-                    print("The password is " + a)
+                    if not args.show_password:
+                        print("The password is " + a)
             else:
                 print("Warning", "Can't to copy to clipboard! pandas library was not found!")
-                print("The password is " + a)
+                if not args.show_password:
+                    print("The password is " + a)
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)

@@ -215,7 +215,7 @@ class MainWindow:
         self.label = tk.Label(self.frame, text="Entries:", font=("arial", 15, "bold"), bg=self.background, fg=self.foreground)
         self.label.grid(row=0, column=2, sticky=tk.W, pady=(15, 0))
 
-        self.category_list = tk.Listbox(self.frame, height=12, width=30, font=("arial", 12))
+        self.category_list = tk.Listbox(self.frame, height=12, width=30, activestyle="none", font=("arial", 12))
         self.category_list.grid(row=1, column=0, columnspan=2)
         self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
 
@@ -236,11 +236,11 @@ class MainWindow:
         self.entry_list.heading('Password', text='Password')
         self.entry_list.heading('Description', text='Description')
         self.entry_list.heading('#0', text='Site')
-        self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
-        self.entry_scrollbar.config(command=self.entry_list.yview)
-
         self.entry_list.grid(row=1, column=2, columnspan=5, sticky="sn")
         self.entry_list.bind("<<TreeviewSelect>>", self.change_button_activation)
+
+        self.entry_scrollbar = tk.Scrollbar(self.frame, orient="vertical")
+        self.entry_scrollbar.config(command=self.entry_list.yview)
 
         self.add_entry_button = tk.Button(self.frame, text="Add Entry", width=14, command=self.add_entry, bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
         self.add_entry_button.grid(row=2, column=4, pady=3, padx=3)
@@ -275,7 +275,7 @@ class MainWindow:
             for  entry  in sql.retrieve_table(MainWindow.db_main, table):
                 self.entry_list.insert("", "end", text=entry[0], values=(entry[2], "*********", entry[1]))
             if len(sql.retrieve_table(MainWindow.db_main, table)) > 8:
-                self.entry_scrollbar.grid(row=1, column=14, sticky="nse")
+                self.entry_scrollbar.grid(row=1, column=6, sticky="nse")
             else:
                 self.entry_scrollbar.grid_forget()
 
@@ -319,9 +319,7 @@ class MainWindow:
         self.newWindow = tk.Toplevel(self.master)
         self.app = AddWindow(self.newWindow)
         self.master.wait_window(self.newWindow)
-        self.category_list.selection_set(MainWindow.table_num)
-        self.change_selected_table(True)
-        self.update_categories()
+        self.update_categories(AddWindow.table_num)
 
     def delete_entry(self):
         entry = self.entry_list.focus()
@@ -329,8 +327,7 @@ class MainWindow:
         if messagebox.askokcancel("Question", "Do you want to delete the entry " + itemname + "?"):
             table = sql.list_tables(MainWindow.db_main)[self.category_list.curselection()[0]][0]
             sql.delete_entry(MainWindow.db_main, itemname, table)
-            self.change_selected_table(True)
-            self.update_categories()
+            self.update_categories(self.category_list.curselection()[0])
 
     def show_password(self):
         entry = self.entry_list.focus()
@@ -469,6 +466,8 @@ class AddWindow:
         
         self.esc_button = tk.Button(self.frame, text="Exit", width=14, command=self.esc, font=("arial", 11, "bold"), bg=self.background, fg=self.foreground)
         self.esc_button.grid(row=5, column=1)
+        
+        AddWindow.table_num = MainWindow.table_num
 
     def add_entry(self):
         site = self.site.get()
@@ -476,6 +475,7 @@ class AddWindow:
         password = self.password.get()
         description = self.description.get()
         table = self.selected_table.get()
+        AddWindow.table_num = sql.list_tables(MainWindow.db_main).index((table,))
         if site == "" or username == "" or password == "":
             messagebox.showinfo("Error", "You must enter a Site, a Password and an Username!")
         elif (site,) in sql.retrieve_entries(MainWindow.db_main, table):

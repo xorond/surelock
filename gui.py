@@ -251,7 +251,7 @@ class MainWindow:
             self.label = tk.Label(self.frame, text="Entries:", font=("arial", 15, "bold"), bg=self.background, fg=self.foreground)
             self.label.grid(row=0, column=2, sticky=tk.W, pady=(15, 0))
 
-            self.category_list = tk.Listbox(self.frame, height=12, width=30, activestyle="none", font=("arial", 12))
+            self.category_list = tk.Listbox(self.frame, height=12, width=40, activestyle="none", font=("arial", 12))
             self.category_list.grid(row=1, column=0, columnspan=2)
             self.category_list.bind("<<ListboxSelect>>", self.change_selected_table)
 

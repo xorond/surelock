@@ -8,10 +8,17 @@ try:
     from libs import crypto_funcs
     from libs import sql
     from libs import common
-    import pandas as pd
 except Exception as e:
     print("Error: {}".format(e))
     sys.exit()
+
+try:
+    has_pandas = True
+    import pandas as pd
+except ImportError:
+    has_pandas = False
+    print("Warning: pandas library couldn't be imported")
+
 
 def main():
 
@@ -23,7 +30,7 @@ def main():
     parser_add.add_argument("entry", help="name of the new entry", type=str)
     parser_add.add_argument("username" , help="username for the entry", default="", type=str)
     parser_add.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
-    parser_add.add_argument("-d", "--description" , help="description of the entry", default="", type=str)
+    parser_add.add_argument("-d", "--description" , help="description of the entry", default="", type=str, nargs='*')
 
     parser_view = subparsers.add_parser('view', help='view a password')
     parser_view.add_argument("entry", help="the entry for which you want to view the password", type=str)
@@ -61,8 +68,8 @@ def main():
         pwd = common.get_master_pass()
         db = sql.Database(filename=args.file)
 
-        # join the rest of the arguments into description as a single string
-        #args.description = " ".join(args.description)
+        #join the rest of the arguments into description as a single string
+        args.description = " ".join(args.description)
 
         sql.create_table(db, args.category, args.file)
         entrypwd = common.get_pass("Password for {}: ".format(args.entry))
@@ -77,11 +84,14 @@ def main():
             pwd = common.get_pass()
             a = sql.retrieve_entry(db, pwd, args.entry, args.category, args.file)
             print(a)
-            try:
-                df=pd.DataFrame([str(a)])
-                df.to_clipboard(index=False,header=False)
-            except Exception as e:
-                print("Error: {}".format(e))
+            if has_pandas:
+                try:
+                    df = pd.DataFrame([str(a)])
+                    df.to_clipboard(index=False, header=False)
+                except Exception:
+                    print("Warning", "Failed to copy to clipboard!")
+            else:
+                print("Warning", "Can't to copy to clipboard! pandas library was not found!")
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)

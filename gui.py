@@ -112,8 +112,8 @@ class FirstWindow:
         self.create_file_pwd2 = tk.Entry(self.create_frame, show="*", textvariable=self.password_create_2, font=("arial", 13), width=45)
         self.create_file_pwd2.grid(row=2, column=1, columnspan=2)
 
-        self.label1 = tk.Label(self.create_frame, text="Passwords do not match! ", bg=self.background, fg=self.background, font=("arial", 13, "bold"))
-        self.label1.grid(row=3, column=1, columnspan=2)
+        self.label1 = tk.Label(self.create_frame, text="  Passwords do not match!", bg=self.background, fg=self.background, font=("arial", 13, "bold"))
+        self.label1.grid(row=2, column=3)
 
         self.create = tk.Button(self.create_frame, text='Create', command=self.next_window_create, bg=self.buttonbg, fg=self.buttonfg, font=("arial", 11, "bold"), width=10)
         self.create.grid(row=3, column=2, pady=10)

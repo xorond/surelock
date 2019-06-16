@@ -124,13 +124,6 @@ def main():
                             os.system("reset")
                         else:
                             os.system("cls")
-            if args.show_password:
-                print("The password is " + a)
-                input("Press enter to clear the command line!") #If preferred you can use time.sleep(10) instead of this line.
-                if is_posix:
-                    os.system("reset")
-                else:
-                    os.system("cls")
             else:
                 print("Warning", "Can't to copy to clipboard! pandas library was not found!")
                 if not args.show_password:
@@ -140,6 +133,13 @@ def main():
                         os.system("reset")
                     else:
                         os.system("cls")
+            if args.show_password:
+                print("The password is " + a)
+                input("Press enter to clear the command line!") #If preferred you can use time.sleep(10) instead of this line.
+                if is_posix:
+                    os.system("reset")
+                else:
+                    os.system("cls")
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)

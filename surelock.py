@@ -36,7 +36,7 @@ def main():
     parser_add.add_argument("username" , help="username for the entry", default="", type=str)
     parser_add.add_argument("category", help="name of the category", default="root", type=str, nargs='?')
     parser_add.add_argument("-r","--random_password", help="store a random password with this entry", action='store_true')
-    parser_add.add_argument("-c","--number_of_characters" , help="number of characters in the random password", default=16, type=int)
+    parser_add.add_argument("-l","--length" , help="number of characters in the random password", default=16, type=int)
     parser_add.add_argument("-s","--special_characters", help="includes special characters in the random password", action='store_true')
     parser_add.add_argument("-n","--numbers", help="includes numbers in the random password", action='store_true')
     parser_add.add_argument("-d","--description" , help="description of the entry", default="", type=str, nargs='*')
@@ -70,7 +70,7 @@ def main():
 
     parser_pwgen = subparsers.add_parser('pwgen', help='Generate a strong password based on a simple one')
     parser_pwgen.add_argument("simple_password", help="simple password", type=str)
-    parser_pwgen.add_argument("number_of_characters" , help="number of characters in the generated password", default=16, type=int, nargs='?')
+    parser_pwgen.add_argument("length" , help="number of characters in the generated password", default=16, type=int, nargs='?')
     parser_pwgen.add_argument("-s","--special_characters", help="includes special characters in the generated password", action='store_true')
     parser_pwgen.add_argument("-n","--numbers", help="includes numbers in the generated password", action='store_true')
 
@@ -92,7 +92,7 @@ def main():
             else:
                 sql.create_table(db, args.category, args.file)
                 if args.random_password:
-                    entrypwd = crypto_funcs.pwd_gen("", args.special_characters, args.numbers, characters=args.number_of_characters)
+                    entrypwd = crypto_funcs.pwd_gen("", args.special_characters, args.numbers, characters=args.length)
                 else:
                     entrypwd = common.get_pass("Password for {}: ".format(args.entry))
                 sql.insert_entry(db, pwd, args.entry, entrypwd, description=args.description, table_name=args.category, filename=args.file, username=args.username)
@@ -177,7 +177,7 @@ def main():
         sql.delete_table(db, args.category, args.file)
 
     if args.subparser_name == 'pwgen':
-        print(crypto_funcs.pwd_gen(args.simple_password, args.special_characters, args.numbers, characters=args.number_of_characters))
+        print(crypto_funcs.pwd_gen(args.simple_password, args.special_characters, args.numbers, characters=args.length))
 
     # handle no arguments
     if len(sys.argv[1:]) == 0:

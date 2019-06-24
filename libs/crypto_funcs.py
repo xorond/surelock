@@ -67,8 +67,8 @@ def pwd_gen(start_pwd="", special_chars=True, numbers=True, upper_case=True, cha
     if numbers and len(set([x for x in final_pwd]).intersection(set(num))) == 0:
         final_pwd = final_pwd[:4] + num[len(start_pwd)*characters%10] + final_pwd[5:]
     return final_pwd
-        
- 
+
+
 # hash_password and verify_password taken from https://www.vitoshacademy.com/hashing-passwords-in-python/
 
 def hash_password(password):
@@ -76,7 +76,7 @@ def hash_password(password):
     pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), salt, 100000)
     pwdhash = binascii.hexlify(pwdhash)
     return (salt + pwdhash).decode('ascii')
- 
+
 def verify_password(stored_password, provided_password):
     salt = stored_password[:64]
     stored_password = stored_password[64:]
@@ -145,7 +145,7 @@ class Password:
 if __name__ == '__main__':
     text = input("text: ")
    given_len = input("length: ")
-   
+
 """
 '''
 

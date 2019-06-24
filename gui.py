@@ -78,7 +78,7 @@ class FirstWindow:
         self.file = open(r"surelock.conf","r")
         self.open_file.insert(tk.END, self.file.read())
         self.file.close()
-        
+
         self.open_file_browse = tk.Button(self.open_frame, text="Browse...", command=self.open_database, bg=self.buttonbg, fg=self.buttonfg, font=("arial", 8, "bold"))
         self.open_file_browse.grid(row=1, column=3, pady=(8, 0))
         self.set_default_button = tk.Button(self.open_frame, text="Set as default database", command=self.set_default, bg=self.buttonbg, fg=self.buttonfg, font=("arial", 8, "bold"))
@@ -505,10 +505,10 @@ class AddWindow:
         self.ask_numbers.grid(row=2, column=0, columnspan=2, sticky=tk.W, pady=2, padx=(90, 0))
         self.password_button = tk.Button(self.pw_gen_frame, text="Generate random password", command=self.generate, font=("arial", 11, "bold"), bg=self.buttonbg, fg=self.buttonfg)
         self.password_button.grid(row=3, column=0, columnspan=2, pady=2)
-        
+
         self.esc_button = tk.Button(self.frame, text="Exit", width=14, command=self.esc, font=("arial", 11, "bold"), bg=self.buttonbg, fg=self.buttonfg)
         self.esc_button.grid(row=5, column=1)
-        
+
         AddWindow.table_num = MainWindow.table_num
 
     def add_entry(self):

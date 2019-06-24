@@ -58,8 +58,12 @@ def add_root_table(db, filename=db_name):
 def check_password(db, password):
     db.run_cmd(f""" SELECT hashed_password FROM hashed_password_table""")
     stored_pw = db.get_cursor().fetchall()
-    db.commit()
-    return crypto_funcs.verify_password(stored_pw[0][0], password)
+    # handle error with old/corrupted database where table doesn't exist
+    # or password can't be retrieved
+    try:
+        return crypto_funcs.verify_password(stored_pw[0][0], password)
+    except IndexError:
+        return False
 
 def list_tables(db, filename=db_name):
     db.run_cmd("SELECT name FROM sqlite_master WHERE type='table'")

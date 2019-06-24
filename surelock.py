@@ -20,7 +20,7 @@ try:
 except ImportError:
     has_pandas = False
     print("Warning: pandas library couldn't be imported")
-    
+
 is_posix = False
 if os.name == 'posix':
     is_posix = True

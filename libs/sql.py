@@ -39,9 +39,7 @@ def init_database_command_line(db, filename=db_name):
     else:
         password = crypto_funcs.hash_password(common.get_master_pass())
         create_table(db, 'root', filename)
-        db.commit()
         db.run_cmd(f""" CREATE TABLE IF NOT EXISTS hashed_password_table (hashed_password TEXT) """)
-        db.commit()
         db.run_cmd(f""" INSERT INTO hashed_password_table (hashed_password) VALUES ('{password}') """)
         db.commit()
 
@@ -49,9 +47,7 @@ def init_database_gui(db, master_pass, filename=db_name):
     if ('hashed_password_table',) not in list_all_tables(db):
         password = crypto_funcs.hash_password(master_pass)
         create_table(db, 'root', filename)
-        db.commit()
         db.run_cmd(f""" CREATE TABLE IF NOT EXISTS hashed_password_table (hashed_password TEXT) """)
-        db.commit()
         db.run_cmd(f""" INSERT INTO hashed_password_table (hashed_password) VALUES ('{password}') """)
         db.commit()
 
@@ -120,7 +116,7 @@ def insert_entry(db, pwd, entry_name, entry_password, description='', table_name
             delete_entry(db, entry_name, table_name)
             db.run_cmd(f""" INSERT INTO '{table_name}' (id, site, password, description, username) VALUES ('{a}', '{entry_name}', '{entry_password}', '{description}', '{username}') """)
             db.commit()
-            
+
 def insert_entry_gui(db, pwd, entry_name, entry_password, description='', table_name='root', filename=db_name, username=''):
     #inserts an entry or replaces it if the name already exists
     entry_password = crypto_funcs.Algorithm(pwd).encrypt(entry_password).decode("ascii")

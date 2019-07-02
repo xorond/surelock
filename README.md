@@ -25,7 +25,6 @@ Wir machen ein privates Git-Repository, um den Code zusammen ohne Versions- oder
 ### Gruppenmitglieder:
   * Oguz Bektas           [@xorond](https://github.com/xorond)
   * Alexander Panzenböck  [@Alex6312](https://github.com/Alex6312)
-  * Yuliia Korobeinikova  [@juliakoko](https://github.com/juliakoko)
 
 ### Tutor: 
   * Clemens Karner

@@ -23,8 +23,8 @@ Siehe [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md)
 Wir machen ein privates Git-Repository, um den Code zusammen ohne Versions- oder Codekonflikte bearbeiten zu können. Wir planen das Projekt nach dem Semesterende zu veröffentlichen (Open Source!).
 
 ### Gruppenmitglieder:
-  * Oguz Bektas           [@xorond](https://github.com/xorond)
-  * Alexander Panzenböck  [@Alex6312](https://github.com/Alex6312)
+  * [Oguz Bektas / @xorond](https://github.com/xorond)
+  * [Alexander Panzenböck / @Alex6312](https://github.com/Alex6312)
 
 ### Tutor: 
   * Clemens Karner

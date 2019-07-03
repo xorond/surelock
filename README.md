@@ -19,5 +19,5 @@ See [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md).
 - [ ] A keyfile feature, as found commonly in other password managers such as KeepassX.
 
 ### Members:
-  * Oguz Bektas           [@xorond](https://github.com/xorond)
-  * Alexander Panzenböck  [@Alex6312](https://github.com/Alex6312)
+  * [Oguz Bektas / @xorond](https://github.com/xorond)
+  * [Alexander Panzenböck / @Alex6312](https://github.com/Alex6312)

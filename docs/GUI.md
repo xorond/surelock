@@ -12,7 +12,7 @@ As an additional feature surelock contains a password generator.
 </p>
 
 If you open Surelock for the first time you need to create a new database for your passwords.
-Choose a filename and a strong password and click Create. Click `Reset` if you want to clear the entries.
+Choose a filename and a strong password and click `Create`. Click `Reset` if you want to clear the entries.
 After creating a database it is automatically opened in the main window (see Main Window). 
 
 If you want to open an existing database choose the file with `Browse`, enter the password and click `Open` to proceed to the main window. 
@@ -30,7 +30,7 @@ The password generator generates strong passwords based on a simple character se
 
 Type a simple easy to remember character sequence into the field `Simple Password`, use the slider to specify the length of the password you want to generate and click `Generate Password`, to generate a password made of letters (upper case and lower case).
 If you check `Include special characters`/ `Include numbers` the password generator will include at least one special character/ number in the generated password.
-Clicking `Copy to Clipboard` copies the password to the clipboard and replaces it with ***** on the screen.
+Clicking `Copy to Clipboard` copies the password to the clipboard and replaces it with `*****` on the screen.
 
 
 ### Main Window
@@ -61,6 +61,3 @@ Enter site, username, password and description, choose a category and click `Add
 
 To save a random password use the slider to specify its length and click `Generate random password`. The generated password will be copied to the password field on the left.
 If you check `Include special characters`/ `Include numbers` the password generator will include at least one special character/ number in the randomly generated password.
-
-
-

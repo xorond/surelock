@@ -143,7 +143,10 @@ def main():
 
     if args.subparser_name == 'del':
         db = sql.Database(filename=args.file)
-        sql.delete_entry(db, args.entry, args.category)
+        pwd = common.get_pass()
+        db = sql.Database(filename=args.file)
+        if sql.check_password(db, pwd):
+            sql.delete_entry(db, args.entry, args.category)
 
     if args.subparser_name == 'show':
         db = sql.Database(filename=args.file)
@@ -174,7 +177,10 @@ def main():
 
     if args.subparser_name == 'delete_category':
         db = sql.Database(filename=args.file)
-        sql.delete_table(db, args.category, args.file)
+        pwd = common.get_pass()
+        db = sql.Database(filename=args.file)
+        if sql.check_password(db, pwd):
+            sql.delete_table(db, args.category, args.file)
 
     if args.subparser_name == 'pwgen':
         print(crypto_funcs.pwd_gen(args.simple_password, args.special_characters, args.numbers, characters=args.length))

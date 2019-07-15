@@ -70,10 +70,7 @@ class FirstWindow:
         self.path = os.getcwd() + self.slash + "surelock.conf"
         if not os.path.isfile(self.path):
             self.file = open(r"surelock.conf","w")
-            if is_posix == False:
-                self.file.write(os.getcwd() + '\Testdatenbank (Passwort=1)\surelock.db')
-            else:
-                self.file.write(os.getcwd() + '/Testdatenbank (Passwort=1)/surelock.db')
+            self.file.write(os.getcwd() + self.slash + 'surelock.db')
             self.file.close()
         self.file = open(r"surelock.conf","r")
         self.open_file.insert(tk.END, self.file.read())
@@ -86,7 +83,6 @@ class FirstWindow:
         self.label = tk.Label(self.open_frame, text="Password: ", bg=self.background, fg=self.foreground, font=("arial", 13, "bold"))
         self.label.grid(row=2, column=0, sticky=tk.E, padx=(73, 0))
         self.open_file_pwd1 = tk.Entry(self.open_frame, show="*", textvariable=self.password_open_1, font=("arial", 13), width=45)
-#        self.open_file_pwd1.insert(tk.END, "1")        #This line exists to speed up testing with the default database
         self.open_file_pwd1.grid(row=2, column=1, columnspan=2)
 
         self.open_button = tk.Button(self.open_frame, text='Open', command=self.next_window_open, bg=self.buttonbg, fg=self.buttonfg, font=("arial", 11, "bold"), width=10)

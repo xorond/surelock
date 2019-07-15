@@ -6,7 +6,7 @@ This is a project that was written for the Programming course for Bachelor of Ma
 
 ## Usage:
 
-See [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md) or [GUI.md](https://github.com/xorond/surelock/blob/master/docs/GUI.md).
+See [USAGE.md](https://github.com/xorond/surelock/blob/master/docs/USAGE.md) or [GUI.md](https://github.com/xorond/surelock/blob/master/docs/GUI Documentation.md).
 
 ## Features:
 - [x] Usable with CLI

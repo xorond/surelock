@@ -112,5 +112,5 @@ Most other commands from surelock are self-explanatory, such as `add_category`,
 You can always view the help page with `-h` or by running `./surelock.py` without any
 arguments.
 
-There is also a GUI made with Tkinter, which can be run with `./surelock-gui.py`.
+There is also a GUI made with Tkinter, which can be run with `./gui.py`.
 

@@ -10,6 +10,9 @@ try:
     from libs import crypto_funcs
     from libs import sql
     from libs import common
+except KeyboardInterrupt:
+    print("\nQuitting.")
+    sys.exit()
 except Exception as e:
     print("Error: {}".format(e))
     sys.exit()
@@ -17,6 +20,9 @@ except Exception as e:
 try:
     has_pandas = True
     import pandas as pd
+except KeyboardInterrupt:
+    print("\nQuitting.")
+    sys.exit()
 except ImportError:
     has_pandas = False
     print("Warning: pandas library couldn't be imported")
@@ -191,4 +197,8 @@ def main():
         sys.exit()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, SystemExit):
+        print("\nQuitting.")
+        sys.exit()

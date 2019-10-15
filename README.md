@@ -1,5 +1,7 @@
 # surelock
 
+![Logo_Surelock](assets/logo_surelock.png)
+
 A password manager written in python.
 
 This is a project that was written for the Programming course for Bachelor of Mathematics at University of Vienna. See the [README in German](https://github.com/xorond/surelock/blob/master/README-de.md) for more information on this.
